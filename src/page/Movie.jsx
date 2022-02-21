@@ -48,7 +48,7 @@ const Movie = () => {
         <div className='flex flex-col gap-2 justify-center items-center '>
             <div id="yohoho"
                 data-title={movie.title}
-                // hdvb/!bazon/
+                data-player='bazon, hdvb'// hdvb/!bazon/
                 className='bg-gray-600 w-[800px] h-[600px]'
             >
             </div>
