@@ -67,7 +67,7 @@ const Movie = () => {
                     />
                 </div>
             </div>
-            <div className='flex gap-8 flex-wrap'>
+            <div className='flex gap-8 flex-wrap mt-[340px] lg:mt-[720px]'>
                 {collection && collection.map( (movie, index) =>(
                     <Link key={index} to={`/movie/${movie.id}_${movie.original_title}`} >
                         <Poster movie={movie} />
