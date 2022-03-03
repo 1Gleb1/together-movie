@@ -21,37 +21,48 @@ export const tvType = {
 const tmdbApi = {
     getMovie: (id) => {
         const url = 'movie/' + id + '?api_key=' + apiConfig.apiKey + '&language=en-US';
-        // console.log(axiosClient.get(url));
         return axiosClient.get(url);
     },
     getMoviesList: (type, params) => {
         const url = 'movie/' + movieType[type];
         return axiosClient.get(url, params);
     },
-    getTvList: (type, params) => {
-        const url = 'tv/' + tvType[type];
-        return axiosClient.get(url, params);
+    getMoviesListBySearch: (movie) => {
+        const url = apiConfig.baseUrl + 'search/movie?api_key='+ apiConfig.apiKey + '&language=en-US&query=' + movie
+        return axiosClient.get(url);
     },
-    getVideos: (cate, id) => {
-        const url = category[cate] + '/' + id + '/videos';
-        return axiosClient.get(url, {params: {}});
+    getMovieByCategory: (genres, params) => {
+        const url = apiConfig.baseUrl + 'discover/movie?api_key=' + apiConfig.apiKey + '&language=en-US&with_genres=' + genres;
+        return axiosClient.get(url, params)
     },
-    search: (cate, params) => {
-        const url = 'search/' + category[cate];
-        return axiosClient.get(url, params);
+    getCollection: (id) => {
+        const url = apiConfig.baseUrl + 'collection/' + id + '?api_key=' + apiConfig.apiKey + '&language=en-US';
+        return axiosClient.get(url)
     },
-    detail: (cate, id, params) => {
-        const url = category[cate] + '/' + id;
-        return axiosClient.get(url, params);
-    },
-    credits: (cate, id) => {
-        const url = category[cate] + '/' + id + '/credits';
-        return axiosClient.get(url, {params: {}});
-    },
-    similar: (cate, id) => {
-        const url = category[cate] + '/' + id + '/similar';
-        return axiosClient.get(url, {params: {}});
-    },
+    // getTvList: (type, params) => {
+    //     const url = 'tv/' + tvType[type];
+    //     return axiosClient.get(url, params);
+    // },
+    // getVideos: (cate, id) => {
+    //     const url = category[cate] + '/' + id + '/videos';
+    //     return axiosClient.get(url, {params: {}});
+    // },
+    // search: (cate, params) => {
+    //     const url = 'search/' + category[cate];
+    //     return axiosClient.get(url, params);
+    // },
+    // detail: (cate, id, params) => {
+    //     const url = category[cate] + '/' + id;
+    //     return axiosClient.get(url, params);
+    // },
+    // credits: (cate, id) => {
+    //     const url = category[cate] + '/' + id + '/credits';
+    //     return axiosClient.get(url, {params: {}});
+    // },
+    // similar: (cate, id) => {
+    //     const url = category[cate] + '/' + id + '/similar';
+    //     return axiosClient.get(url, {params: {}});
+    // },
 }
 
 export default tmdbApi;
