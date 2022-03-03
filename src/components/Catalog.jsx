@@ -84,14 +84,14 @@ const Catalog = () => {
                 <button onClick={handleHome} className={"text-5xl py-2 font-bold"}>Home</button>
                 )}
 
-                <div className="flex flex-col gap-2 max-w-6xl p-6 my-2 bg-gray-800 rounded-lg">
+                <div className="flex flex-col gap-2 max-w-6xl p-6 my-2  bg-gray-800 rounded-lg">
                   {/* <h1 className="text-2xl font-bold text-center">Page {pageEx}</h1> */}
-                  <div className='flex flex-wrap gap-6 '>
+                  <div className='flex flex-wrap gap-8 justify-center'>
                     {
-                    listSer.results
-
+                    listSer.results 
+                    
                     ?
-
+                    
                     listSer.results .map( (movie, index) =>(
                       <Link key={index} to={`/movie/${movie.id}_${movie.title}`} >
                         <Poster movie={movie} />
