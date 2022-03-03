@@ -7,7 +7,7 @@ const Filter = ({ setActiveGenre, setPageEx}) => {
     }
 
     return (
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap text-sm justify-center items-center">
             <button onClick={() => handleGeter(null)}>All</button>
             <button onClick={() => handleGeter(28)}>Action</button>
             <button onClick={() => handleGeter(12)}>Adventure</button>
