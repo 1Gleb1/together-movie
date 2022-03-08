@@ -58,7 +58,7 @@ const Catalog = () => {
           </div>
 
           <div className='py-2'>
-            <h2 className='text-3xl font-bold ml-12 pb-4'>Popular</h2>
+            <h2 className='text-3xl font-bold ml-6 sm:ml-12 pb-4'>Popular</h2>
             <Swiper
                 effect='coverflow'
                 modules={[EffectCoverflow, EffectCube, SwiperPagination]}

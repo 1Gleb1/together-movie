@@ -40,12 +40,12 @@ const Movie = () => {
             <div className='max-w-7xl relative'>
                 <img src={image} />
                 <div className='absolute bottom-0'>
-                    <div className='text-white bg-gray-700 bg-opacity-40 lg:text-5xl px-6 py-4'>
+                    <div className='text-white bg-gray-700 bg-opacity-40 sm:text-4xl px-6 py-4'>
                         <span className='font-black'>
                             {movie.title}
                         </span>
                         <br />
-                        <span className='text-sm font-medium lg:text-3xl '>
+                        <span className='text-sm font-medium lg:text-2xl '>
                             {movie.overview}
                         </span>
                     </div>
@@ -56,17 +56,17 @@ const Movie = () => {
                 <br />
                 {movie.imdb_id}
             </div>
-            <div className='flex justify-center bg-gray-700 lg:max-w-7xl w-full lg:h-[520px]'>{/* max-w-7xl w-full h-[520px] */}
-                <div className="relative w-full lg:w-[720px]"> 
+            <div className='flex justify-center bg-gray-700  w-full h-[250px] sm:h-[520px]'>{/* max-w-7xl w-full h-[520px] */}
+                <div className="relative w-full w-[340px] sm:w-[720px]"> 
                     <iframe 
                         src={`https://74.svetacdn.in/DRQQUUcW0qvr?imdb_id=${movie.imdb_id}`}//imdb_id=${movie.imdb_id}
-                        className='absolute w-[340px] lg:w-[720px] h-[250px] lg:h-[520px]'// w-[720px] h-[520px]
+                        className='absolute w-[340px] sm:w-[720px] h-[250px] sm:h-[520px]'// w-[720px] h-[520px]
                         frameborder="1"
                         allowFullScreen
                     />
                 </div>
             </div>
-            <div className='flex gap-8 flex-wrap '>
+            <div className='flex gap-8 flex-wrap  '>
                 {collection && collection.map( (movie, index) =>(
                     <Link key={index} to={`/movie/${movie.id}_${movie.original_title}`} >
                         { movie.poster_path && (<Poster movie={movie} />)}

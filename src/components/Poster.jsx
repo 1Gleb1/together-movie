@@ -3,17 +3,25 @@ import React from 'react'
 import apiConfig from '../api/apiConfig'
 
 
+const title = { hidden: {opacity: 0, y: 90}, view: {opacity: 1, y: 0}}
 
 const Poster = ({movie}) => {
   const imgW500 = apiConfig.w500Image(movie.poster_path)
   return (
-    <motion.div whileHover={{scale: 1.09}} className='text-white overflow-hidden relative'> {/* relative */}
-      <div>
-        <span className='absolute bg-slate-800 bottom-0 left-0 right-0 text-center p-2 font-bold text-lg'>
-          {movie.original_title}
-        </span>
+    <motion.div 
+      whileHover={{scale: 1.04}} 
+      className='text-white overflow-hidden relative rounded-lg'> {/* relative */}
+        <motion.span animate="hidden" whileHover={"view"} variants={title} className='absolute bg-slate-900 bg-opacity-70 bottom-0 left-0 right-0 top-0 text-center p-2'>
+          <span>            
+            <h5 className='font-bold text-[16px] p-1'>
+              {movie.original_title}
+            </h5>
+            <p className={`text-sm leading-[1.05]`}>
+              { movie.overview.length <= 260 ? movie.overview : `${movie.overview.substring(0, 260)}...` }
+            </p>
+          </span>
+        </motion.span>
         <img src={imgW500} className='object-cover w-44 h-[260px]' />
-      </div>
     </motion.div>
   )
 }
