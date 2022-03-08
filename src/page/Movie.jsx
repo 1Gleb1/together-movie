@@ -9,31 +9,30 @@ const Movie = () => {
 
     const [movie, setMovie] = useState({})
     const image = apiConfig.originalImage(movie.backdrop_path)
+    console.log(image);
     const params = useParams()
     const chank = params.slug.split("_")
     const id = chank[0]
 
-
     const [collection, setCollection] = useState()
     
-    const getMovie = async () => {
-        try {
-            const response = await tmdbApi.getMovie(id)
-            setMovie(response)
-            if(movie.backdrop_path !== null){
-                const idCollection = await response.belongs_to_collection.id
-                const resColl = await tmdbApi.getCollection(idCollection)
-            setCollection(resColl.parts)
-            }
-        } catch {
-            console.log('error')
-        }
-    }
-
 
     useEffect(() => {
+        const getMovie = async () => {
+            try {
+                const response = await tmdbApi.getMovie(id)
+                setMovie(response)
+                if(movie.backdrop_path !== null){
+                    const idCollection = await response.belongs_to_collection.id
+                    const resColl = await tmdbApi.getCollection(idCollection)
+                setCollection(resColl.parts)
+                }
+            } catch {
+                console.log('error')
+            }
+        }
         getMovie()
-    }, [collection])
+    }, [id])
     
 
     return (
@@ -46,7 +45,7 @@ const Movie = () => {
                             {movie.title}
                         </span>
                         <br />
-                        <span className='text-sm font-medium'>
+                        <span className='text-sm font-medium lg:text-3xl '>
                             {movie.overview}
                         </span>
                     </div>
@@ -58,19 +57,19 @@ const Movie = () => {
                 {movie.imdb_id}
             </div>
             <div className='flex justify-center bg-gray-700 lg:max-w-7xl w-full lg:h-[520px]'>{/* max-w-7xl w-full h-[520px] */}
-                <div className="relative w-full w-[340px] lg:w-[720px]"> 
+                <div className="relative w-full lg:w-[720px]"> 
                     <iframe 
                         src={`https://74.svetacdn.in/DRQQUUcW0qvr?imdb_id=${movie.imdb_id}`}//imdb_id=${movie.imdb_id}
                         className='absolute w-[340px] lg:w-[720px] h-[250px] lg:h-[520px]'// w-[720px] h-[520px]
-                        frameborder="0"
+                        frameborder="1"
                         allowFullScreen
                     />
                 </div>
             </div>
-            <div className='flex gap-8 flex-wrap mt-[340px] lg:mt-[720px]'>
+            <div className='flex gap-8 flex-wrap '>
                 {collection && collection.map( (movie, index) =>(
                     <Link key={index} to={`/movie/${movie.id}_${movie.original_title}`} >
-                        <Poster movie={movie} />
+                        { movie.poster_path && (<Poster movie={movie} />)}
                     </Link>
                 ))}
             </div>

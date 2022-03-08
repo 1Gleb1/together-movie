@@ -48,7 +48,7 @@ const Search = ({setListSer}) => {
                 placeholder='Enter your movie'
                 value={keyword}
                 onChange={(e)=> setKeyword(e.target.value)}
-                className='bg-indigo-900 p-2 my-4 rounded'
+                className='bg-indigo-900 p-2 rounded'
             />
         </div>
     )
