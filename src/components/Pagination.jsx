@@ -33,14 +33,14 @@ const Pagination = ({listSer, pageEx, setPageEx}) => {
     return (
         <div className='flex justify-center'>
             {!listSer.results && (
-              <div className=" max-w-lg flex justify-between gap-2 bg-gray-600 bg-opacity-60 py-2 px-4 rounded">
+              <div className=" max-w-lg flex justify-between gap-2 bg-slate-800 bg-opacity-50 py-2 px-4 rounded">
                   <button onClick={() => prevPage()}>Prev</button>
                   {listPage.map((page, index) => (
                     <button key={index} onClick={() => handlePage(page)}>{page}</button>
                   ))}
                   <input type="text" placeholder='...' 
                       onChange={e => e.target.value ? handlePage(e.target.value) : handlePage(pageEx)}
-                      className="text-white w-6 bg-gray-800 text-center" 
+                      className="text-white w-6 bg-slate-900 text-center" 
                   />
                   <button onClick={() => handlePage(500)}>{500}</button>
                   <button onClick={() => nextPage()}>Next</button>

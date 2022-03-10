@@ -20,7 +20,6 @@ const Catalog = () => {
     const [movieItems, setMovieItems] = useState([])
     const [pageEx, setPageEx] = useState(1)
     const [popularList, setPopularList] = useState([])
-
     const imageCollection = []
 
     popularList.forEach(item => {
@@ -53,27 +52,30 @@ const Catalog = () => {
     return (
         <div className='w-full min-h-screen'>
 
-          <div className='flex justify-center pt-4'>
-              <Search setListSer={setListSer} setMovieItems={setMovieItems} />
-          </div>
-
-          <div className='py-2'>
-            <h2 className='text-3xl font-bold ml-6 sm:ml-12 pb-4'>Popular</h2>
+          <div className='pb-2'>
+            {/* <h2 className='text-3xl font-bold ml-6 sm:ml-12 pb-4'>Popular</h2> */}
             <Swiper
                 effect='coverflow'
                 modules={[EffectCoverflow, EffectCube, SwiperPagination]}
                 centeredSlides={true} // for EffectCoverflow
                 grabCursor={true}
-                pagination={true}
+                pagination={{clickable: true}}
                 loop={true}
+                autoplay={true}
                 className='relative w-full h-[250px] sm:h-[600px]'
               >
-                {imageCollection.map((item, index) => (
+                {popularList.map((item, index) => (
                   <SwiperSlide key={index} >
-                    <img src={item} className='absolute left-0 right-0 top-0 ' />
+                    <Link to={`/movie/${item.id}_${item.title}`} >
+                      <img src={imageCollection[index]} className='absolute left-0 right-0 top-0 ' />
+                    </Link>
                   </SwiperSlide>
                 ))}
             </Swiper>
+          </div>
+          
+          <div className='flex justify-center pt-4'>
+              <Search setListSer={setListSer} setMovieItems={setMovieItems} />
           </div>
 
             {!listSer.results && (
@@ -85,7 +87,7 @@ const Catalog = () => {
               <button onClick={handleHome} className={"text-5xl py-2 font-bold"}>Home</button>
             )}
             
-            <div className="flex flex-col justify-center items-center gap-2 p-6 my-2 bg-slate-700 rounded-lg">
+            <div className="flex flex-col justify-center items-center gap-2 pt-6 px-6 my-2 rounded-lg max-w-7xl">
               <div className='flex flex-wrap gap-8 justify-center my-2'>
                 {/* For Serch List */}
                 {listSer.results && (
@@ -107,7 +109,7 @@ const Catalog = () => {
               </div>
             </div>
 
-            <div className='py-2'>
+            <div className='pb-2'>
               <Pagination listSer={listSer} pageEx={pageEx} setPageEx={setPageEx} />
             </div>
         </div>

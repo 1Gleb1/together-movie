@@ -6,7 +6,7 @@ import User from "./page/User";
 
 function App() {
   return (
-    <div className="w-full min-h-screen bg-gray-800 text-white "> 
+    <div className="w-full min-h-screen text-white "> 
     {/* flex flex-col justify-center items-center */}
       <Routes>
         <Route path="/" element={<Main/>} />
