@@ -70,7 +70,7 @@ const Movie = () => {
                 {movie.imdb_id}
             </div> */}
 
-            <div className=' m-12 flex justify-center bg-gray-700  w-full h-[250px] sm:h-[520px]'>{/* max-w-7xl w-full h-[520px] */}
+            <div className=' flex justify-center bg-gray-700  w-full h-[250px] sm:h-[520px]'>{/* max-w-7xl w-full h-[520px] */}
                 <div className="relative w-full max-w-[340px] sm:max-w-[720px]"> 
                     <iframe 
                         src={`https://74.svetacdn.in/DRQQUUcW0qvr?imdb_id=${movie.imdb_id}`}//imdb_id=${movie.imdb_id}
@@ -81,7 +81,7 @@ const Movie = () => {
                 </div>
             </div>
 
-            <div className='flex gap-8 flex-wrap  '>
+            <div className='flex gap-8 flex-wrap my-6 '>
                 {collection && collection.map( (movie, index) =>(
                     <Link key={index} to={`/movie/${movie.id}_${movie.original_title}`} >
                         { movie.poster_path && (<Poster movie={movie} />)}
