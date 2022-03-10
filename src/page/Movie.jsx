@@ -71,7 +71,7 @@ const Movie = () => {
             </div> */}
 
             <div className='m-32 flex justify-center bg-gray-700  w-full h-[250px] sm:h-[520px]'>{/* max-w-7xl w-full h-[520px] */}
-                <div className="relative w-full w-[340px] sm:w-[720px]"> 
+                <div className="relative w-full max-w-[340px] sm:max-w-[720px]"> 
                     <iframe 
                         src={`https://74.svetacdn.in/DRQQUUcW0qvr?imdb_id=${movie.imdb_id}`}//imdb_id=${movie.imdb_id}
                         className='absolute w-[340px] sm:w-[720px] h-[250px] sm:h-[520px]'// w-[720px] h-[520px]
