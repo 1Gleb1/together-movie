@@ -1,9 +1,9 @@
-import React from 'react'
+import React from "react";
 
 const Navigation = () => {
   return (
     <div>
-        {/* <button onClick={()=> setFilter(28)}>Action</button>
+      {/* <button onClick={()=> setFilter(28)}>Action</button>
         <button onClick={()=> setFilter(12)}>Adventure</button>
         <button onClick={()=> setFilter(16)}>Animation</button>
         <button onClick={()=> setFilter(35)}>Comedy</button>
@@ -23,7 +23,7 @@ const Navigation = () => {
         <button onClick={()=> setFilter(10752)}>War</button>
         <button onClick={()=> setFilter(37)}>Western</button> */}
     </div>
-  )
-}
+  );
+};
 
-export default Navigation
+export default Navigation;

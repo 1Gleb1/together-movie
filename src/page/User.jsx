@@ -1,35 +1,56 @@
-import React, {useEffect, useState} from 'react'
-import { firestore } from '../firebase/clientApp'
-import { collection, DocumentData, query, getDocs } from 'firebase/firestore'
+import React, { useEffect, useState } from "react";
+import { firestore } from "../firebase/clientApp";
+import {
+  collection,
+  query,
+  onSnapshot,
+  doc,
+  deleteDoc,
+} from "firebase/firestore";
+import Poster from "../components/Poster";
+import { Link } from "react-router-dom";
 
 const User = () => {
-    
-    const [favoriteList, setFavoriteList] = useState([])
-    const favoriteCollection = collection(firestore, 'favorite')
+  const [favoriteList, setFavoriteList] = useState([]);
+  const favoriteCollection = collection(firestore, "favorite");
+  const favoriteListQuery = query(favoriteCollection);
+  let unsub;
 
-    const getFavoriteList = async() => {
-        const favoriteListQuery = query(favoriteCollection)
-        const querySnapshot = await getDocs(favoriteListQuery)
-        const result = []
-        querySnapshot.forEach((snapshot) => result.push(snapshot))
-        setFavoriteList(result)
-    }
+  const getFavoriteList = async () => {
+    unsub = onSnapshot(favoriteListQuery, (snapshot) => {
+      const result = [];
+      snapshot.forEach((doc) => result.push(doc));
+      setFavoriteList(result);
+    });
+  };
 
+  useEffect(() => {
+    getFavoriteList();
+    return () => {
+      unsub();
+    };
+  }, []);
 
-    useEffect( () => {
-        getFavoriteList()
-    }, [])
+  const handleDelete = async (index) => {
+    const itemRef = doc(firestore, "favorite", favoriteList[index].id);
+    await deleteDoc(itemRef);
+  };
 
-    return (
-    <div className='flex gap-8'>
-        {favoriteList.map((listItem, index) => (
-            <div className='text-white text-lg ' key={index} >
-                {listItem.data().title}
-            </div>
-            )
-        )}
+  return (
+    <div className="flex flex-col justify-center items-center gap-8">
+      <span>watch later</span>
+      <div className="max-w-xl flex flex-wrap gap-5">
+        {favoriteList.map((item, index) => (
+          <div key={index}>
+            <Link to={`/movie/${item.data().id}_${item.data().original_title}`}>
+              {item.data().poster_path && <Poster movie={item.data()} />}
+            </Link>
+            <button onClick={() => handleDelete(index)}>Delete</button>
+          </div>
+        ))}
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default User
+export default User;
