@@ -1,18 +1,31 @@
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
+import Allert from "./Allert";
 
 const Register = () => {
   const auth = getAuth();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const [confirmPassword, setConfirmPassword] = useState();
+  const emailRef = useRef();
+  const passwordRef = useRef();
+  const passwordConfirmRef = useRef();
+  const [error, setError] = useState("");
 
-  const handleRegister = () => {
-    if (password !== confirmPassword) {
-      console.log("cofirm !== password");
+  const handleRegister = (e) => {
+    e.preventDefault();
+    if (passwordRef.current.value !== passwordConfirmRef.current.value) {
+      setError("Passwords do not match");
       return;
     } else {
-      return createUserWithEmailAndPassword(auth, email, password);
+      createUserWithEmailAndPassword(
+        auth,
+        emailRef.current.value,
+        passwordRef.current.value
+      )
+        .then(console.log("signIN"))
+        .catch((error) => {
+          const errorCode = error.code.split("/");
+          const errorMessage = error.message;
+          setError(errorCode[1].replace(/-/g, " "));
+        });
     }
   };
 
@@ -24,21 +37,21 @@ const Register = () => {
           required
           type="email"
           placeholder="Enter your email..."
-          onChange={(e) => setEmail(e.target.value)}
+          ref={emailRef}
         />
         <input
           className="px-2 py-1 text-white bg-gray-700 border-2 border-gray-900 rounded-lg"
           required
           type="password"
           placeholder="Enter password..."
-          onChange={(e) => setPassword(e.target.value)}
+          ref={passwordRef}
         />
         <input
           className="px-2 py-1 text-white bg-gray-700 border-2 border-gray-900 rounded-lg"
           required
           type="password"
           placeholder="Enter confirm password..."
-          onChange={(e) => setConfirmPassword(e.target.value)}
+          ref={passwordConfirmRef}
         />
         <button
           type="submit"
@@ -47,6 +60,7 @@ const Register = () => {
           Register
         </button>
       </form>
+      {error && <Allert error={error} />}
     </div>
   );
 };

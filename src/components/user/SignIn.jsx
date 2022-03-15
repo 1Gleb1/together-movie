@@ -1,9 +1,11 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import Allert from "./Allert";
 
 const SignIn = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
+  const [error, setError] = useState("");
 
   const auth = getAuth();
   const handleSignIn = (e) => {
@@ -18,10 +20,10 @@ const SignIn = () => {
         console.log(user.email, user.displayName);
       })
       .catch((error) => {
-        const errorCode = error.code;
+        const errorCode = error.code.split("/");
         const errorMessage = error.message;
-
-        console.log(errorCode, errorMessage);
+        console.log(errorCode);
+        setError(errorCode[1].replace(/-/g, " "));
       });
   };
 
@@ -46,6 +48,7 @@ const SignIn = () => {
           Login
         </button>
       </form>
+      {error && <Allert error={error} />}
     </div>
   );
 };

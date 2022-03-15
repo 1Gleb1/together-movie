@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { AiFillGoogleCircle } from "react-icons/ai";
-import { GoSignOut } from "react-icons/go";
 import { firestore } from "../firebase/clientApp";
 import {
   collection,
@@ -16,7 +15,6 @@ import {
   getAuth,
   signInWithPopup,
   GoogleAuthProvider,
-  signOut,
   onAuthStateChanged,
 } from "firebase/auth";
 import Login from "../components/user/Register";
@@ -43,9 +41,6 @@ const User = () => {
   const provider = new GoogleAuthProvider();
   const handleSignInWithGoogle = () => {
     signInWithPopup(auth, provider).then((result) => console.log(result));
-  };
-  const handleLogOut = () => {
-    signOut(auth);
   };
 
   const uid = auth.currentUser ? auth.currentUser.uid : "";
@@ -111,9 +106,9 @@ const User = () => {
         </div>
       )}
 
-      <div>
-        <span>watch later</span>
-        {isUser && (
+      {isUser && (
+        <div>
+          <span>watch later</span>
           <div className="max-w-xl flex flex-wrap gap-5">
             {favoriteList.map((item, index) => (
               <div key={index}>
@@ -131,9 +126,8 @@ const User = () => {
               </div>
             ))}
           </div>
-        )}
-        {!isUser && <div>Авторизируйтесь</div>}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

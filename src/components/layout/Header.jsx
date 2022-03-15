@@ -23,7 +23,9 @@ const Header = () => {
         <Link to={"/"}>Logo</Link>
         <div>
           <Link to={"/user"}>
-            User({auth.currentUser && auth.currentUser.email})
+            <a className="hover:underline">
+              User({auth.currentUser && auth.currentUser.email})
+            </a>
           </Link>
           {auth.currentUser != null && (
             <button onClick={handleLogOut}>Logout</button>
