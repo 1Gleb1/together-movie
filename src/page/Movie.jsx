@@ -4,15 +4,9 @@ import apiConfig from "../api/apiConfig";
 import tmdbApi from "../api/tmdbApi";
 import Poster from "../components/Poster";
 import { firestore } from "../firebase/clientApp";
-import {
-  addDoc,
-  collection,
-  query,
-  onSnapshot,
-  doc,
-  deleteDoc,
-} from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 import FavoriteList from "../components/FavoriteList";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const Movie = () => {
   const [movie, setMovie] = useState({});
@@ -26,42 +20,51 @@ const Movie = () => {
   const [inList, setInList] = useState(false);
   let unsub;
 
+  const auth = getAuth();
+  const [isUser, setIsUser] = useState(false);
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      setIsUser(true);
+    } else {
+      setIsUser(false);
+    }
+  });
+  const uid = auth.currentUser ? auth.currentUser.uid : "";
+
   const handleAdd = async () => {
-    const newItem = movie;
+    const newItem = { ...movie, uid };
     await addDoc(collection(firestore, "favorite"), newItem);
   };
 
   // ДУБЛИКАТ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  const [favoriteList, setFavoriteList] = useState([]);
-  const favoriteCollection = collection(firestore, "favorite");
-  const favoriteListQuery = query(favoriteCollection);
+  // const [favoriteList, setFavoriteList] = useState([]);
+  // const favoriteCollection = collection(firestore, "favorite");
+  // const favoriteListQuery = query(favoriteCollection);
 
-  const getFavoriteList = async () => {
-    unsub = onSnapshot(favoriteListQuery, (snapshot) => {
-      const result = [];
-      snapshot.forEach((doc) => result.push(doc));
-      setFavoriteList(result);
-    });
-  };
+  // const getFavoriteList = () => {
+  //   unsub = onSnapshot(favoriteListQuery, (snapshot) => {
+  //     const result = [];
+  //     snapshot.forEach((doc) => {
+  //       result.push(doc);
+  //     });
+  //     setFavoriteList(result);
+  //   });
+  // };
 
   const handleDelete = async (index) => {
-    let temp;
-    let delItem;
-    favoriteList.forEach((item) => {
-      temp = item._document.data.value.mapValue.fields.title.stringValue;
-      if (temp == index) {
-        delItem = temp.id;
-        console.log(delItem);
-      }
-    });
-    const itemRef = doc(firestore, "favorite", delItem);
-    await deleteDoc(itemRef);
+    //   let delItem;
+    //   favoriteList.forEach((item) => {
+    //     if (item == index) {
+    //     }
+    //   });
+    //   const itemRef = doc(firestore, "favorite", delItem);
+    //   await deleteDoc(itemRef);
   };
 
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   useEffect(() => {
-    getFavoriteList();
+    // getFavoriteList();
     const getMovie = async () => {
       try {
         const response = await tmdbApi.getMovie(id);
@@ -102,12 +105,22 @@ const Movie = () => {
                 </span>
                 <br />
                 <span className="text-sm sm:text-2xl">{movie.overview}</span>
-                <FavoriteList
-                  movie={movie.title}
-                  handleAdd={handleAdd}
-                  inList={inList}
-                  handleDelete={handleDelete}
-                />
+                {isUser ? (
+                  <FavoriteList
+                    movie={movie.title}
+                    handleAdd={handleAdd}
+                    inList={inList}
+                    handleDelete={handleDelete}
+                  />
+                ) : (
+                  <Link to="/user" passHref>
+                    <a>
+                      <div className="p-2 text-lg italic hover:underline">
+                        Sign in for add film in wishlist
+                      </div>
+                    </a>
+                  </Link>
+                )}
               </div>
             </div>
           </div>
