@@ -19,6 +19,7 @@ import {
 } from "firebase/auth";
 import Login from "../components/user/Register";
 import SignIn from "../components/user/SignIn";
+import Chat from "../components/user/Chat";
 
 const User = () => {
   const [isRegisterForm, setIsRegisterForm] = useState(false);
@@ -107,25 +108,36 @@ const User = () => {
       )}
 
       {isUser && (
-        <div>
-          <span>watch later</span>
-          <div className="max-w-xl flex flex-wrap gap-5">
-            {favoriteList.map((item, index) => (
-              <div key={index}>
-                <Link
-                  to={`/movie/${item.data().id}_${item.data().original_title}`}
-                >
-                  {item.data().poster_path && <Poster movie={item.data()} />}
-                </Link>
-                <button
-                  onClick={() => handleDelete(index)}
-                  className="w-full text-lg font-medium rounded-lg mt-2 py-3 px-4 bg-gradient-to-b from-rose-700 to-pink-900 hover:from-rose-800 hover:to-red-900 transition"
-                >
-                  Delete
-                </button>
-              </div>
-            ))}
+        <div className="flex flex-col sm:flex-row justify-between max-w-7xl w-full">
+          <div>
+            <h2 className="text-center text-xl font-bold bg-slate-700 text-white rounded-lg py-2 mb-2">
+              Chat
+            </h2>
+            <Chat />
           </div>
+          <div>
+            <span>watch later</span>
+            <div className="max-w-xl flex flex-wrap gap-5">
+              {favoriteList.map((item, index) => (
+                <div key={index}>
+                  <Link
+                    to={`/movie/${item.data().id}_${
+                      item.data().original_title
+                    }`}
+                  >
+                    {item.data().poster_path && <Poster movie={item.data()} />}
+                  </Link>
+                  <button
+                    onClick={() => handleDelete(index)}
+                    className="w-full text-lg font-medium rounded-lg mt-2 py-3 px-4 bg-gradient-to-b from-rose-700 to-pink-900 hover:from-rose-800 hover:to-red-900 transition"
+                  >
+                    Delete
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div />
         </div>
       )}
     </div>
