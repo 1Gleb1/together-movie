@@ -1,7 +1,7 @@
 import React from "react";
 import { AiOutlinePlusCircle, AiOutlineMinusCircle } from "react-icons/ai";
 
-const FavoriteList = ({ title, handleAdd, handleDelete }) => {
+const FavoriteList = ({ handleAdd }) => {
   return (
     <div>
       {/* <button

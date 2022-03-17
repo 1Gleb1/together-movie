@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, Route } from "react-router-dom";
 import apiConfig from "../api/apiConfig";
 import tmdbApi from "../api/tmdbApi";
 import Poster from "../components/Poster";
@@ -14,11 +14,8 @@ const Movie = () => {
   const imgW500 = apiConfig.w500Image(movie.poster_path);
   const params = useParams();
   const chank = params.slug.split("_");
-  const id = chank[0];
+  const imdbId = chank[0];
   const [collectionMovie, setCollectionMovie] = useState([]);
-
-  const [inList, setInList] = useState(false);
-  let unsub;
 
   const auth = getAuth();
   const [isUser, setIsUser] = useState(false);
@@ -52,22 +49,21 @@ const Movie = () => {
   // };
 
   const handleDelete = async (index) => {
-    //   let delItem;
-    //   favoriteList.forEach((item) => {
-    //     if (item == index) {
-    //     }
-    //   });
-    //   const itemRef = doc(firestore, "favorite", delItem);
-    //   await deleteDoc(itemRef);
+    // let delItem;
+    // favoriteList.forEach((item) => {
+    //   if (item == index) {
+    //   }
+    // });
+    // const itemRef = doc(firestore, "favorite", delItem);
+    // await deleteDoc(itemRef);
   };
 
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   useEffect(() => {
-    // getFavoriteList();
     const getMovie = async () => {
       try {
-        const response = await tmdbApi.getMovie(id);
+        const response = await tmdbApi.getMovie(imdbId);
         setMovie(response);
         if (movie.backdrop_path !== null) {
           const idCollection = await response.belongs_to_collection.id;
@@ -80,10 +76,8 @@ const Movie = () => {
     };
     // window.scrollTo(0, 0);
     getMovie();
-    return () => {
-      unsub();
-    };
-  }, [id]);
+    return () => {};
+  }, [imdbId]);
 
   return (
     <div className="w-full min-h-sreen flex flex-col justify-center items-center ">
@@ -105,22 +99,34 @@ const Movie = () => {
                 </span>
                 <br />
                 <span className="text-sm sm:text-2xl">{movie.overview}</span>
-                {isUser ? (
-                  <FavoriteList
-                    movie={movie.title}
-                    handleAdd={handleAdd}
-                    inList={inList}
-                    handleDelete={handleDelete}
-                  />
-                ) : (
-                  <Link to="/user" passHref>
-                    <a>
-                      <div className="p-2 text-lg italic hover:underline">
-                        Sign in for add film in wishlist
-                      </div>
-                    </a>
+                <div className="flex gap-4 items-center">
+                  {isUser ? (
+                    <FavoriteList
+                      movie={movie.title}
+                      handleAdd={handleAdd}
+                      handleDelete={handleDelete}
+                    />
+                  ) : (
+                    <div>
+                      <Link to="/user">
+                        <div className="p-2 text-lg italic hover:underline">
+                          Sign in for add film in wishlist
+                        </div>
+                      </Link>
+                    </div>
+                  )}
+                  {/* LINK IN ROOM */}
+                  <Link
+                    to={`/room/${(+new Date()).toString(16)}/${movie.id}_${
+                      movie.original_title
+                    }`}
+                  >
+                    <div className="px-3 py-2 text-lg italic bg-indigo-600 hover:bg-indigo-700 rounded-3xl ">
+                      Create room
+                    </div>
                   </Link>
-                )}
+                  {/*  */}
+                </div>
               </div>
             </div>
           </div>
@@ -128,12 +134,11 @@ const Movie = () => {
       </div>
 
       <div className="mt-20 flex justify-center bg-gray-700  w-full h-[250px] sm:h-[520px]">
-        {/* max-w-7xl w-full h-[520px] */}
         <div className="relative w-full max-w-[340px] sm:max-w-[720px]">
           <iframe
             src={`https://74.svetacdn.in/DRQQUUcW0qvr?imdb_id=${movie.imdb_id}`} //imdb_id=${movie.imdb_id}
-            className="absolute w-[340px] sm:w-[720px] h-[250px] sm:h-[520px]" // w-[720px] h-[520px]
-            frameborder="1"
+            className="absolute w-[340px] sm:w-[720px] h-[250px] sm:h-[520px]"
+            frameBorder="0"
             allowFullScreen
           />
         </div>
@@ -143,7 +148,7 @@ const Movie = () => {
         {collectionMovie &&
           collectionMovie.map((movie, index) => (
             <Link key={index} to={`/movie/${movie.id}_${movie.original_title}`}>
-              {movie.poster_path && <Poster movie={movie} />}
+              {<Poster movie={movie} />}
             </Link>
           ))}
       </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import tmdbApi from "../api/tmdbApi";
+import tmdbApi from "../../api/tmdbApi";
 
 const Search = ({ setListSer }) => {
   const [keyword, setKeyword] = useState("");

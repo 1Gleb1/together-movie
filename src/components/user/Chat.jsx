@@ -17,16 +17,19 @@ const Chat = () => {
       setUser(null);
     }
   });
-
+  console.log(newMessage);
   const sendMessage = (e) => {
     e.preventDefault();
-    push(ref(db, "messages"), {
-      username: user.displayName,
-      email: user.email,
-      uid: user.uid,
-      text: newMessage.target.value,
-      timestamp: Date.now(),
-    });
+    if (newMessage.length > 0) {
+      push(ref(db, "messages"), {
+        username: user.displayName,
+        email: user.email,
+        uid: user.uid,
+        text: newMessage,
+        timestamp: Date.now(),
+      });
+      setNewMessage("");
+    }
   };
 
   useEffect(() => {
@@ -45,9 +48,9 @@ const Chat = () => {
   }, []);
 
   return (
-    <div className="bg-gray-700 p-4 w-80 rounded-lg flex flex-col mt-3 h-screen max-h-[26rem]">
+    <div className="bg-gray-700 p-4 w-80 rounded-lg flex flex-col h-screen max-h-screen">
       <h5 className=" text-left font-bold mb-3">Name</h5>
-      <div className=" flex flex-col flex-grow overflow-auto rounded-lg bg-slate-900 p-3">
+      <div className=" flex flex-col flex-grow overflow-auto rounded-lg bg-slate-900 p-2">
         {/*  */}
         {messages.map((message, index) => (
           <div
@@ -69,15 +72,16 @@ const Chat = () => {
         <form className="flex flex-grow">
           <input
             type="text"
-            className="bg-gray-800 text-white pl-3 py-3 w-full rounded-l-lg "
+            className={`bg-gray-800 text-white pl-3 py-3 w-full rounded-l-lg `}
+            value={newMessage}
             onChange={(e) => {
-              setNewMessage(e);
+              setNewMessage(e.target.value);
             }}
           />
           <button
             type="submit"
             onClick={sendMessage}
-            className="bg-emerald-700 px-4 flex justify-center items-center rounded-r-lg"
+            className={`bg-emerald-700 px-4 flex justify-center items-center rounded-r-lg`}
           >
             <GrSend className="text-slate-300 text-lg " color="white" />
           </button>

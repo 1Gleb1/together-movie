@@ -23,6 +23,10 @@ const Poster = ({ movie }) => {
         </p>
       </div>
       <motion.span
+        transition={{
+          ease: "easeInOut",
+          duration: 0.2,
+        }}
         animate="hidden"
         whileHover={"view"}
         variants={title}

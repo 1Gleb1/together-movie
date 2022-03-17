@@ -2,6 +2,7 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Main from "./page/Main";
 import Movie from "./page/Movie";
+import Together from "./page/room/[slug]";
 import User from "./page/User";
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
         <Route path="/" element={<Main />} />
         <Route path="/movie/:slug" element={<Movie />} />
         <Route path="/user" element={<User />} />
+        <Route path="/room/:slug/:slug" element={<Together />} />
       </Routes>
     </div>
   );

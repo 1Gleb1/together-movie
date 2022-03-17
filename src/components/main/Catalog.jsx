@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Filter from "./Filter";
 import Pagination from "./Pagination";
-import Poster from "./Poster";
+import Poster from "../Poster";
 import Search from "./Search";
-import tmdbApi from "../api/tmdbApi";
-import apiConfig from "../api/apiConfig";
+import tmdbApi from "../../api/tmdbApi";
+import apiConfig from "../../api/apiConfig";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Pagination as SwiperPagination } from "swiper";
 import "swiper/css";
@@ -14,7 +14,7 @@ import "swiper/css/effect-cube";
 import "swiper/css/pagination";
 
 const Catalog = () => {
-  const [activeGenre, setActiveGenre] = useState(null);
+  const [activeGenre, setActiveGenre] = useState([]);
   const [listSer, setListSer] = useState({});
   const [movieItems, setMovieItems] = useState([]);
   const [pageEx, setPageEx] = useState(1);
@@ -54,15 +54,12 @@ const Catalog = () => {
       <div className="py-2">
         {/* <h2 className='text-3xl font-bold ml-6 sm:ml-12 pb-4'>Popular</h2> */}
         <Swiper
-          // effect='coverflow'
           modules={[EffectCoverflow, SwiperPagination]}
           spaceBetween={80}
-          centeredSlides={true} // for EffectCoverflow
-          grabCursor={true}
           pagination={{ clickable: true }}
           loop={true}
-          autoplay={true}
-          className="relative max-w-7xl rounded-xl"
+          autoplay={{ delay: 8000 }}
+          className="relative rounded-xl min-w-[300px] max-w-[1300px]"
         >
           {popularList.map((item, index) => (
             <SwiperSlide key={index}>
@@ -70,6 +67,7 @@ const Catalog = () => {
                 <img
                   src={imageCollection[index]}
                   className="object-cover rounded-xl overflow-hidden relative top-0 "
+                  alt={item.title}
                 />
                 <div className="absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-b from-transparent via-transparent to-[#111827D9]" />
               </Link>
@@ -84,7 +82,11 @@ const Catalog = () => {
 
       {!listSer.results && (
         <div className="py-2">
-          <Filter setPageEx={setPageEx} setActiveGenre={setActiveGenre} />
+          <Filter
+            setPageEx={setPageEx}
+            setActiveGenre={setActiveGenre}
+            activeGenre={activeGenre}
+          />
         </div>
       )}
       {listSer.results && (
@@ -92,7 +94,6 @@ const Catalog = () => {
           Home
         </button>
       )}
-
       <div className="m-auto pt-6 px-6 my-2 rounded-lg max-w-[1100px]">
         <div className="flex flex-wrap gap-8 justify-center my-2">
           {/* For Serch List */}
@@ -106,7 +107,9 @@ const Catalog = () => {
           {!listSer.results &&
             movieItems.map((movie, index) => (
               <Link key={index} to={`/movie/${movie.id}_${movie.title}`}>
-                {movie.poster_path && <Poster movie={movie} />}
+                {movie.poster_path && movie.vote_average !== 0 && (
+                  <Poster movie={movie} />
+                )}
               </Link>
             ))}
         </div>
