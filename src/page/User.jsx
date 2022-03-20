@@ -8,6 +8,8 @@ import {
   doc,
   deleteDoc,
   where,
+  addDoc,
+  setDoc,
 } from "firebase/firestore";
 import Poster from "../components/Poster";
 import { Link } from "react-router-dom";
@@ -20,6 +22,7 @@ import {
 import Login from "../components/user/Register";
 import SignIn from "../components/user/SignIn";
 import Chat from "../components/user/Chat";
+import FriendList from "../components/user/FriendList";
 
 const User = () => {
   const [isRegisterForm, setIsRegisterForm] = useState(false);
@@ -29,22 +32,31 @@ const User = () => {
   const handleRegisterForm = () => {
     setIsRegisterForm(true);
   };
+
   // AUTH
   const [isUser, setIsUser] = useState(false);
   const auth = getAuth();
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      setIsUser(true);
-    } else {
-      setIsUser(false);
-    }
-  });
+
   const provider = new GoogleAuthProvider();
   const handleSignInWithGoogle = () => {
     signInWithPopup(auth, provider).then((result) => console.log(result));
   };
 
   const uid = auth.currentUser ? auth.currentUser.uid : "";
+  // "99BnqKaocoP42kJmKo6HJju4kUu1"
+  // "OLlL93ccYOZy6D0YQzyDR1eJBFA3"
+
+  //Save User
+  const saveUser = async (user) => {
+    const userCollection = collection(firestore, "user");
+    const itemUser = {
+      uid: user.uid,
+      displayName: user.displayName,
+      email: user.email,
+    };
+    await setDoc(doc(firestore, "user", user.uid), itemUser);
+    console.log(userCollection);
+  };
 
   // GET LIST
   const [favoriteList, setFavoriteList] = useState([]);
@@ -67,6 +79,14 @@ const User = () => {
 
   useEffect(() => {
     getFavoriteList();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsUser(true);
+        saveUser(user);
+      } else {
+        setIsUser(false);
+      }
+    });
     return () => {
       unsub();
     };
@@ -109,11 +129,17 @@ const User = () => {
 
       {isUser && (
         <div className="flex flex-col sm:flex-row justify-between max-w-7xl w-full">
-          <div>
+          {/* <div>
             <h2 className="text-center text-xl font-bold bg-slate-700 text-white rounded-lg py-2 mb-2">
               Chat
             </h2>
             <Chat />
+          </div> */}
+          <div>
+            <h2 className="text-center text-xl font-bold bg-slate-700 text-white rounded-lg py-2 mb-2">
+              FrienList
+            </h2>
+            <FriendList />
           </div>
           <div>
             <span>watch later</span>

@@ -133,7 +133,6 @@ const Filter = ({ activeGenre, setActiveGenre, setPageEx }) => {
     if (found != -1) {
       temp.push(...activeGenre);
       temp.splice(found, 1);
-      console.log(temp);
       setActiveGenre(temp);
     } else {
       temp.push(...activeGenre, value);

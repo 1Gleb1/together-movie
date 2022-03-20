@@ -4,13 +4,13 @@ import { getDatabase, onValue, push, ref } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import moment from "moment";
 
-const Chat = () => {
+const Chat = ({ anotherUser }) => {
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [user, setUser] = useState();
   const auth = getAuth();
   const db = getDatabase();
-  //   console.log(auth.currentUser.displayName);
+
   onAuthStateChanged(auth, (user) => {
     if (user) {
       setUser(user);
@@ -22,19 +22,32 @@ const Chat = () => {
   const sendMessage = (e) => {
     e.preventDefault();
     if (newMessage.length > 0) {
-      push(ref(db, "messages"), {
-        username: user.displayName,
-        email: user.email,
-        uid: user.uid,
-        text: newMessage,
-        timestamp: Date.now(),
-      });
+      push(
+        ref(
+          db,
+          anotherUser
+            ? `message/${auth.currentUser.uid}_${anotherUser}`
+            : "messages"
+        ),
+        {
+          username: user.displayName,
+          email: user.email,
+          uid: user.uid,
+          text: newMessage,
+          timestamp: Date.now(),
+        }
+      );
       setNewMessage("");
     }
   };
 
   useEffect(() => {
-    const messagesRef = ref(db, "messages");
+    const messagesRef = ref(
+      db,
+      anotherUser
+        ? `message/${auth.currentUser.uid}_${anotherUser}`
+        : "messages"
+    );
     onValue(messagesRef, (snapshot) => {
       let data = snapshot.val();
       let messagesTmp = [];
@@ -50,7 +63,9 @@ const Chat = () => {
 
   return (
     <div className="bg-gray-700 p-4 rounded-lg flex flex-col h-screen w-[600px]">
-      <h5 className=" font-bold mb-3 text-center">Name</h5>
+      <h5 className=" font-bold mb-3 text-center">
+        {anotherUser ? anotherUser : "Общий Чат"}
+      </h5>
       <div className=" flex flex-col flex-grow overflow-auto rounded-lg bg-[#111E41] p-2  ">
         {/*  */}
         {messages.map((message, index) => (
