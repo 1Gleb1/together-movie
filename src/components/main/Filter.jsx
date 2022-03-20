@@ -129,7 +129,17 @@ const Filter = ({ activeGenre, setActiveGenre, setPageEx }) => {
 
   const handleGeter = (value) => {
     const temp = [];
-    temp.push(...activeGenre, value);
+    const found = activeGenre.findIndex((genre) => genre === value);
+    if (found != -1) {
+      temp.push(...activeGenre);
+      temp.splice(found, 1);
+      console.log(temp);
+      setActiveGenre(temp);
+    } else {
+      temp.push(...activeGenre, value);
+      setActiveGenre(temp);
+    }
+
     if (value == null) {
       temp.length = 0;
       setActiveGenre(temp);
@@ -168,7 +178,9 @@ const Filter = ({ activeGenre, setActiveGenre, setPageEx }) => {
             <button
               onClick={() => handleGeter(item.code)}
               className={`${
-                activeGenre[0] == item.code ? item.bgColor : ""
+                activeGenre.some((genre) => genre == item.code)
+                  ? "bg-indigo-900"
+                  : ""
               } w-32 h-28 flex flex-col gap-2 justify-center items-center px-6 py-2 bg-gray-800 rounded-lg
                 `}
             >

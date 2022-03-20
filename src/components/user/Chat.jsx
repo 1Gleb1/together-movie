@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { GrSend } from "react-icons/gr";
 import { getDatabase, onValue, push, ref } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import moment from "moment";
 
 const Chat = () => {
   const [newMessage, setNewMessage] = useState("");
@@ -48,22 +49,38 @@ const Chat = () => {
   }, []);
 
   return (
-    <div className="bg-gray-700 p-4 w-80 rounded-lg flex flex-col h-screen max-h-screen">
-      <h5 className=" text-left font-bold mb-3">Name</h5>
-      <div className=" flex flex-col flex-grow overflow-auto rounded-lg bg-slate-900 p-2">
+    <div className="bg-gray-700 p-4 rounded-lg flex flex-col h-screen w-[600px]">
+      <h5 className=" font-bold mb-3 text-center">Name</h5>
+      <div className=" flex flex-col flex-grow overflow-auto rounded-lg bg-[#111E41] p-2  ">
         {/*  */}
         {messages.map((message, index) => (
-          <div
-            key={index}
-            className={` bg-slate-800 rounded-lg text-white p-3 w-[80%] relative mb-2 ${
-              message.uid === user.uid ? "bg-slate-600 self-end" : "bg-red-500"
-            }`}
-          >
-            <h6 className="font-medium italic">{message.username}</h6>
-            <p className="my-3 leading-[1rem]">{message.text}</p>
-            <i className=" text-xs text-white text-opacity-80 absolute right-2 bottom-2">
-              {/* {message.timestamp} */}
-            </i>
+          <div className="flex relative">
+            <div className="w-12 h-12 " />
+            <div className=" absolute top-3 left-1 w-12 h-12 bg-white rounded-full " />
+
+            <div
+              key={index}
+              className={`rounded-2xl text-sky-400 flex flex-col p-3 w-[60%] relative ${
+                message.uid === user.uid
+                  ? "bg-transparent self-end" // #0A71A8
+                  : "bg-transparent" // #21397D
+              }`}
+            >
+              <div className="flex flex-col items-start">
+                <h6 className="font-basic text-md flex gap-8 items-center">
+                  <span className="text-xl">{message.username}</span>
+                  <span className="text-[1rem] whitespace-nowrap">
+                    {moment(message.timestamp).startOf("minutes").fromNow()}
+                  </span>
+                </h6>
+                <div className=" w-full">
+                  <p className="my-[2px] leading-[1rem] break-words text-white text-lg  ">
+                    {message.text}
+                  </p>
+                </div>
+              </div>
+              {/* <i className=" text-xs text-white text-opacity-80 absolute right-2 bottom-1"></i> */}
+            </div>
           </div>
         ))}
         {/*  */}
