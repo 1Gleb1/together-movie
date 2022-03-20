@@ -18,7 +18,7 @@ const Chat = () => {
       setUser(null);
     }
   });
-  console.log(newMessage);
+
   const sendMessage = (e) => {
     e.preventDefault();
     if (newMessage.length > 0) {
@@ -54,17 +54,12 @@ const Chat = () => {
       <div className=" flex flex-col flex-grow overflow-auto rounded-lg bg-[#111E41] p-2  ">
         {/*  */}
         {messages.map((message, index) => (
-          <div className="flex relative">
+          <div className="flex relative" key={index}>
             <div className="w-12 h-12 " />
             <div className=" absolute top-3 left-1 w-12 h-12 bg-white rounded-full " />
 
             <div
-              key={index}
-              className={`rounded-2xl text-sky-400 flex flex-col p-3 w-[60%] relative ${
-                message.uid === user.uid
-                  ? "bg-transparent self-end" // #0A71A8
-                  : "bg-transparent" // #21397D
-              }`}
+              className={`rounded-2xl text-sky-400 flex flex-col p-3 w-[60%] relative`}
             >
               <div className="flex flex-col items-start">
                 <h6 className="font-basic text-md flex gap-8 items-center">
