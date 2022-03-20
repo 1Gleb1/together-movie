@@ -68,7 +68,9 @@ const Chat = () => {
             >
               <div className="flex flex-col items-start">
                 <h6 className="font-basic text-md flex gap-8 items-center">
-                  <span className="text-xl">{message.username}</span>
+                  <span className="text-xl whitespace-nowrap">
+                    {message.username}
+                  </span>
                   <span className="text-[1rem] whitespace-nowrap">
                     {moment(message.timestamp).startOf("minutes").fromNow()}
                   </span>
