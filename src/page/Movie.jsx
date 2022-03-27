@@ -144,7 +144,7 @@ const Movie = () => {
         </div>
       </div>
 
-      <div className="flex gap-8 flex-wrap pt-8">
+      <div className="flex gap-8 flex-wrap pt-8 mb-4">
         {collectionMovie &&
           collectionMovie.map((movie, index) => (
             <Link key={index} to={`/movie/${movie.id}_${movie.original_title}`}>

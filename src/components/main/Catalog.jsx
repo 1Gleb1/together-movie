@@ -12,6 +12,7 @@ import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/effect-cube";
 import "swiper/css/pagination";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Catalog = () => {
   const [activeGenre, setActiveGenre] = useState([]);
@@ -104,14 +105,19 @@ const Catalog = () => {
               </Link>
             ))}
           {/* For All List */}
-          {!listSer.results &&
-            movieItems.map((movie, index) => (
-              <Link key={index} to={`/movie/${movie.id}_${movie.title}`}>
-                {movie.poster_path && movie.vote_average !== 0 && (
-                  <Poster movie={movie} />
-                )}
-              </Link>
-            ))}
+          {!listSer.results && (
+            <div className="flex flex-wrap gap-8 justify-center my-2">
+              {movieItems.map((movie, index) => (
+                <Link key={index} to={`/movie/${movie.id}_${movie.title}`}>
+                  {movie.poster_path && movie.vote_average !== 0 && (
+                    <AnimatePresence exitBeforeEnter={true}>
+                      <Poster movie={movie} key={movie.title} index={index} />
+                    </AnimatePresence>
+                  )}
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

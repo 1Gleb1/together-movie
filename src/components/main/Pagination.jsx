@@ -15,12 +15,12 @@ const Pagination = ({ listSer, pageEx, setPageEx }) => {
     let value = pageEx;
     value = value + 1;
     setPageEx(value);
-    window.scrollTo(0, 0);
+    // window.scrollTo(0, 0);
   };
   const handlePage = (value) => {
     setPageEx(Number(value));
     listPage.length = 0;
-    window.scrollTo(0, 0);
+    // window.scrollTo(0, 0);
   };
   const listPage = [];
   for (let i = 1; i < pageEx + 10; i++) {
