@@ -10,162 +10,60 @@ import {
   setDoc,
   where,
   getDoc,
+  limit,
+  serverTimestamp,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { firestore } from "../../firebase/clientApp";
 import Chat from "./Chat";
 
-const FriendList = () => {
+const FriendList = ({ currentID, setCurrentID }) => {
   const [anotherUser, setAnotherUser] = useState();
-  const [userArray, setUserArray] = useState([]);
-  const [groups, setGroups] = useState([]);
-  const [currentGroup, setCurrentGroup] = useState();
-  const [message, setMessage] = useState([]);
-  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [userArray, setUserArray] = useState([]);
+  const [messages, setMessages] = useState([]);
   const auth = getAuth();
   const user = auth.currentUser;
+  const currentUserId = user.uid;
+
   const getArrayUser = async () => {
     const docRef = collection(firestore, "user");
     let docSnap = await getDocs(docRef);
     const temp = [];
     docSnap.forEach((doc) => {
-      temp.push(doc._document.data.value.mapValue.fields);
+      temp.push(doc.data());
     });
     setUserArray(temp);
   };
 
-  // CreateGroup
-  const createGroup = async (userArray, createBy) => {
-    const groupItem = {
-      createAt: new Date(),
-      createBy,
-      members: userArray,
-    };
-    return new Promise((resolve, reject) => {
-      firestore
-        .collection("group")
-        .add(groupItem)
-        .then(function (docRef) {
-          groupItem.id = docRef.id;
-          this.fetchGroupByUserID(this.user.uid);
-          resolve(groupItem);
-        })
-        .catch(function (error) {
-          reject(error);
+  const getChats = (friendUid, friendName, friendUser) => {
+    setAnotherUser(friendUser);
+    setMessages(null);
+    setCurrentID(
+      currentUserId > friendUid
+        ? currentUserId + friendUid
+        : friendUid + currentUserId
+    );
+
+    const chatsDocRef = collection(firestore, `chats/${currentID}/messages`);
+    const chatsQuery = query(chatsDocRef, orderBy("createOn", "asc"));
+    const unsub = onSnapshot(chatsQuery, (snapshot) => {
+      snapshot.forEach((doc) => {
+        let msg = [];
+        snapshot.forEach((doc) => {
+          msg.push(doc.data());
         });
+        setMessages(msg);
+      });
     });
+    console.log(currentID);
   };
-
-  const chooseUser = async (user) => {
-    setAnotherUser(user);
-    let group = await this.filterGroup([this.user.uid, user.uid.stringValue]);
-    if (group == null) {
-      group = await this.createGroup(
-        [this.user.uid, user.uid.stringValue],
-        this.user.uid
-      );
-    }
-    this.chooseGroup(group);
-  };
-
-  // FilterGroup
-  // let unsubFilterGroup;
-  // const filterGroup = (userArray) => {
-  //   let groupRef = collection(firestore, "group");
-  //   const allGroups = [];
-  //   userArray.forEach((userId) => {
-  //     groupRef = query(groupRef, where("members", "==", userId));
-  //   });
-
-  //   if (allGroups.length > 0) {
-  //     groups.push(allGroups[0]);
-  //   } else {
-  //     groups.length = 0;
-  //   }
-  // };
-
-  // const chooseGroup = async (group) => {
-  //   setMessages([]);
-  //   setCurrentGroup(group);
-  //   await fetchUserByGroup(currentGroup);
-  //   // setTimeout(async () => {
-  //   //   await fetchMessagesByGroupId(currentGroup.id);
-  //   // }, 200);
-  // };
-  // const fetchUserByGroup = async (groupId) => {
-  //   const groups = [];
-  //   // const groupRefDoc = doc(collection(firestore, "group"), groupId);
-  //   // groupRefDoc.forEach((doc) => {
-  //   //   console.log(doc);
-  //   // });
-  // };
-
-  // const filterUser = (item, queryText, itemText) => {
-  //   const textOne = item.displayName.toLowerCase();
-  //   const textTwo = item.email.toLowerCase();
-  //   const searchText = queryText.toLowerCase();
-  //   return textOne.include(searchText) || textTwo.include(searchText);
-  // };
-  // const updateGroup = (group) => {
-  //   const groupRefDoc = doc(collection(firestore, "group"), group.id);
-  //   setDoc(groupRefDoc, group);
-  // };
-
-  // // Save Message
-  // const saveMessage = async (textMessage, currentGroupId, e) => {
-  //   e.preventDefault();
-  //   if (textMessage) {
-  //     const message = {
-  //       textMessage,
-  //       sentAt: new Date(),
-  //       sentBy: authUid,
-  //     };
-  //     await addDoc(
-  //       collection(firestore, `message/${currentGroupId}/messages`),
-  //       message
-  //     );
-  //   }
-  //   setNewMessage("");
-  // };
-  // const sendMessage = async () => {
-  //   const sentAt = new Date();
-  //   const message = await saveMessage(message, sentAt, currentGroup.id);
-  //   if (message) {
-  //     setMessage(null);
-  //     const group = {
-  //       ...currentGroup,
-  //       ...{
-  //         users: null,
-  //         modifiedAt: sentAt,
-  //         recentMessage: { ...message, ...{ readBy: [] } },
-  //       },
-  //     };
-  //     updateGroup(group);
-  //   }
-  // };
-  // // Fetch Message for group ID
-  // let unsubFetchMessageForGroupId;
-  // const fetchMessagesByGroupId = (groupId) => {
-  //   const refColletion = query(
-  //     collection(firestore, `message/${groupId}/messages`),
-  //     orderBy("sentAt")
-  //   );
-  //   unsubFetchMessageForGroupId = onSnapshot(refColletion, (snapshot) => {
-  //     const allMessages = [];
-  //     snapshot.forEach((doc) => {
-  //       if (doc) allMessages.push(doc.data());
-  //     });
-  //     setMessages(allMessages);
-  //   });
-  // };
 
   useEffect(() => {
     getArrayUser();
-    return () => {
-      // unsubFilterGroup();
-    };
-  }, []);
+    setMessages("");
+    return () => {};
+  }, [currentUserId]);
 
   return (
     <div className=" w-[600px] bg-blue-700 rounded-lg ">
@@ -176,10 +74,10 @@ const FriendList = () => {
             <div className=" absolute top-4 left-2 w-12 h-12 bg-white rounded-full " />
             <div className="flex flex-col">
               <button
-                onClick={() => chooseUser(user)}
+                onClick={() => getChats(user.uid, user.displayName, user)}
                 className="hover:underline"
               >
-                {user.email.stringValue}
+                {user.displayName}
               </button>
               <div>Message</div>
             </div>
@@ -187,12 +85,14 @@ const FriendList = () => {
         ))}
       {anotherUser && (
         <Chat
-          setAnotherUser={setAnotherUser}
           anotherUser={anotherUser}
-          userArray={userArray}
-          // fetchMessagesByGroupId={fetchMessagesByGroupId}
-          // sendMessage={sendMessage}
+          setAnotherUser={setAnotherUser}
+          newMessage={newMessage}
+          setNewMessage={setNewMessage}
           messages={messages}
+          setMessages={setMessages}
+          currentID={currentID}
+          setCurrentID={setCurrentID}
         />
       )}
     </div>

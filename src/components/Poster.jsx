@@ -11,6 +11,7 @@ const Poster = ({ movie, index }) => {
     hidden: { opacity: 0, scale: 0 },
     view: { opacity: 0, scale: 0 },
   };
+
   const imgW500 = apiConfig.w500Image(movie.poster_path);
   return (
     <motion.div
@@ -34,15 +35,17 @@ const Poster = ({ movie, index }) => {
         {" "}
         {/* relative */}
         <div className="absolute top-1 right-1">
-          <p
-            className={`w-10 h-10 flex justify-center items-center text-white font-medium ${
-              movie.vote_average < 5 ? "bg-red-600" : "bg-emerald-600"
-            } rounded-full text-shdow`}
-          >
-            {movie.vote_average != 10
-              ? movie.vote_average.toFixed(1)
-              : movie.vote_average}
-          </p>
+          <div>
+            <p
+              className={`w-10 h-10 flex justify-center items-center text-white font-medium ${
+                movie.vote_average < 5 ? "bg-red-600" : "bg-emerald-600"
+              } rounded-full text-shdow`}
+            >
+              {movie.vote_average !== 10
+                ? movie.vote_average.toFixed(1)
+                : movie.vote_average}
+            </p>
+          </div>
         </div>
         <motion.span
           transition={{

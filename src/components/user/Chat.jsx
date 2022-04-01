@@ -1,35 +1,45 @@
 import React, { useEffect, useState } from "react";
 import { GrSend } from "react-icons/gr";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import moment from "moment";
+import { getAuth } from "firebase/auth";
+import { firestore } from "../../firebase/clientApp";
 import {
   addDoc,
   collection,
-  doc,
-  onSnapshot,
-  orderBy,
-  query,
+  serverTimestamp,
   setDoc,
-  Timestamp,
-  where,
 } from "firebase/firestore";
-import { firestore } from "../../firebase/clientApp";
-
 const Chat = ({
   setAnotherUser,
   anotherUser,
-  userArray,
-  fetchMessagesByGroupId,
-  sendMessage,
+  newMessage,
+  setNewMessage,
   messages,
+  setCurrentID,
+  currentID,
 }) => {
-  const { uid, displayName, email } = anotherUser;
-  const [newMessage, setNewMessage] = useState("");
-  const [currentGroupId, setCurrentGroupId] = useState();
-  const [group, setGroup] = useState([]);
-
+  const { displayName, email, uid } = anotherUser;
   const auth = getAuth();
-  const authUid = auth.currentUser.uid;
+  const user = auth.currentUser;
+  const currentUserId = user.uid;
+
+  const back = () => {
+    setAnotherUser();
+  };
+
+  const sendMessage = async (e, msg) => {
+    e.preventDefault();
+    if (msg.length === 0) {
+      return;
+    } else {
+      await addDoc(collection(firestore, `chats/${currentID}/messages`), {
+        createOn: serverTimestamp(),
+        uid: currentUserId,
+        msg: msg,
+        name: user.displayName,
+      });
+    }
+    setNewMessage("");
+  };
 
   useEffect(() => {
     return () => {};
@@ -38,41 +48,40 @@ const Chat = ({
   return (
     <div className="bg-gray-700 p-4 rounded-lg flex flex-col h-screen w-[600px]">
       <div className="flex justify-between items-center">
-        <button onClick={() => setAnotherUser()}>Back</button>
-        <h5 className=" font-bold mb-3 text-center">
-          {displayName.stringValue}
-        </h5>
+        <button onClick={() => back()}>Back</button>
+        <h5 className=" font-bold mb-3 text-center">{displayName}</h5>
         <div />
       </div>
       {/*  */}
       <div className=" flex flex-col flex-grow overflow-auto rounded-lg bg-[#111E41] p-2  ">
-        {messages.map((message, index) => (
-          <div className="flex relative" key={index}>
-            <div className="w-12 h-12 " />
-            <div className=" absolute top-3 left-1 w-12 h-12 bg-white rounded-full" />
+        {messages &&
+          messages.map((message, index) => (
+            <div className="flex relative" key={index}>
+              <div className="w-12 h-12 " />
+              <div className=" absolute top-3 left-1 w-12 h-12 bg-white rounded-full" />
 
-            <div
-              className={`rounded-2xl text-sky-400 flex flex-col p-3 w-[60%] relative self-end`}
-            >
-              <div className="flex flex-col">
-                <h6 className="font-basic text-md flex gap-8 items-center">
-                  <span className="text-xl whitespace-nowrap">
-                    {message.sentBy}
-                  </span>
-                  <span className="text-[1rem] whitespace-nowrap">
-                    {/* {moment(message.timestamp).startOf("minutes").fromNow()} */}
-                  </span>
-                </h6>
-                <div className=" w-full">
-                  <p className="my-[2px] leading-[1rem] break-words text-white text-lg  ">
-                    {message.textMessage}
-                  </p>
+              <div
+                className={`rounded-2xl text-sky-400 flex flex-col p-3 w-[60%] relative self-end`}
+              >
+                <div className="flex flex-col">
+                  <h6 className="font-basic text-md flex gap-8 items-center">
+                    <span className="text-xl whitespace-nowrap">
+                      {message.name}
+                    </span>
+                    {/* <span className="text-[1rem] whitespace-nowrap">
+                      {message.createOn}
+                    </span> */}
+                  </h6>
+                  <div className=" w-full">
+                    <p className="my-[2px] leading-[1rem] break-words text-white text-lg  ">
+                      {message.msg}
+                    </p>
+                  </div>
                 </div>
+                {/* <i className=" text-xs text-white text-opacity-80 absolute right-2 bottom-1"></i> */}
               </div>
-              {/* <i className=" text-xs text-white text-opacity-80 absolute right-2 bottom-1"></i> */}
             </div>
-          </div>
-        ))}
+          ))}
       </div>
       {/*  */}
       <div className="my-2">
@@ -86,7 +95,7 @@ const Chat = ({
             }}
           />
           <button
-            onClick={(e) => sendMessage(newMessage, currentGroupId, e)}
+            onClick={(e) => sendMessage(e, newMessage)}
             type="submit"
             className={`bg-emerald-700 px-4 flex justify-center items-center rounded-r-lg`}
           >

@@ -1,21 +1,23 @@
 import React from "react";
-import { AiOutlinePlusCircle, AiOutlineMinusCircle } from "react-icons/ai";
+import { AiOutlinePlusCircle } from "react-icons/ai";
 
 const FavoriteList = ({ handleAdd }) => {
   return (
     <div>
-      {/* <button
-        onClick={() => handleDelete(title)}
-        className="mt-2 w-8 sm:w-10 sm:h-10 flex justify-center items-center bg-rose-800 rounded-full"
-      >
-        <AiOutlineMinusCircle className="text-3xl" />
-      </button> */}
-      <button
-        onClick={handleAdd}
-        className="mt-2 w-8 sm:w-10 sm:h-10 flex justify-center items-center bg-sky-800 rounded-full"
-      >
-        <AiOutlinePlusCircle className="text-3xl" />
-      </button>
+      <div class="dropdown dropdown-hover">
+        <label tabindex="0" className="">
+          <AiOutlinePlusCircle className="text-4xl" />
+        </label>
+        <ul
+          tabindex="0"
+          class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+        >
+          <li>
+            <p onClick={handleAdd}>Wishlist</p>
+          </li>
+          <input type="text" placeholder="New playlist" className="input" />
+        </ul>
+      </div>
     </div>
   );
 };

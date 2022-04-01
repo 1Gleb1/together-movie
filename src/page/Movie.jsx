@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link, Route } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import apiConfig from "../api/apiConfig";
 import tmdbApi from "../api/tmdbApi";
 import Poster from "../components/Poster";
@@ -10,6 +10,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const Movie = () => {
   const [movie, setMovie] = useState({});
+  const [genres, setGenres] = useState();
   const image = apiConfig.originalImage(movie.backdrop_path);
   const imgW500 = apiConfig.w500Image(movie.poster_path);
   const params = useParams();
@@ -33,7 +34,7 @@ const Movie = () => {
     await addDoc(collection(firestore, "favorite"), newItem);
   };
 
-  // ДУБЛИКАТ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  //  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   // const [favoriteList, setFavoriteList] = useState([]);
   // const favoriteCollection = collection(firestore, "favorite");
   // const favoriteListQuery = query(favoriteCollection);
@@ -65,6 +66,7 @@ const Movie = () => {
       try {
         const response = await tmdbApi.getMovie(imdbId);
         setMovie(response);
+        setGenres(response.genres);
         if (movie.backdrop_path !== null) {
           const idCollection = await response.belongs_to_collection.id;
           const resColl = await tmdbApi.getCollection(idCollection);
@@ -74,7 +76,7 @@ const Movie = () => {
         console.log("error");
       }
     };
-    // window.scrollTo(0, 0);
+    window.scrollTo(0, 0);
     getMovie();
     return () => {};
   }, [imdbId]);
@@ -94,18 +96,44 @@ const Movie = () => {
                 <img src={imgW500} alt={movie.title} />
               </div>
               <div className=" flex flex-col flex-wrap text-white leading-none">
-                <span className="flex items-center gap-8 font-black text-sm sm:text-3xl">
+                <span className="flex items-center gap-8 font-black text-sm sm:text-4xl ">
                   {movie.title}
                 </span>
-                <br />
+                <div className="flex py-2 gap-2">
+                  {genres &&
+                    genres.map((genre, index) => (
+                      <div
+                        key={index}
+                        className="btn btn-outline btn-accent btn-xs rounded-full"
+                      >
+                        {genre.name}
+                      </div>
+                    ))}
+                </div>
+                <div className="badge badge-outline badge-ghost badge-lg">
+                  Duration: {movie.runtime} min
+                </div>
+
                 <span className="text-sm sm:text-2xl">{movie.overview}</span>
                 <div className="flex gap-4 items-center">
                   {isUser ? (
-                    <FavoriteList
-                      movie={movie.title}
-                      handleAdd={handleAdd}
-                      handleDelete={handleDelete}
-                    />
+                    <div className="flex  items-center gap-2 mt-4">
+                      <FavoriteList
+                        movie={movie.title}
+                        handleAdd={handleAdd}
+                        handleDelete={handleDelete}
+                      />
+
+                      {/* LINK IN ROOM */}
+                      <Link
+                        to={`/room/${(+new Date()).toString(16)}/${movie.id}_${
+                          movie.original_title
+                        }`}
+                      >
+                        <a className="btn btn-primary btn-xl">Create room</a>
+                      </Link>
+                      {/*  */}
+                    </div>
                   ) : (
                     <div>
                       <Link to="/user">
@@ -115,17 +143,6 @@ const Movie = () => {
                       </Link>
                     </div>
                   )}
-                  {/* LINK IN ROOM */}
-                  <Link
-                    to={`/room/${(+new Date()).toString(16)}/${movie.id}_${
-                      movie.original_title
-                    }`}
-                  >
-                    <div className="px-3 py-2 text-lg italic bg-indigo-600 hover:bg-indigo-700 rounded-3xl ">
-                      Create room
-                    </div>
-                  </Link>
-                  {/*  */}
                 </div>
               </div>
             </div>

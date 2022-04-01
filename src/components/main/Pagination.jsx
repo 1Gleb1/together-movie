@@ -6,7 +6,7 @@ const Pagination = ({ listSer, pageEx, setPageEx }) => {
       let value = pageEx;
       value = value - 1;
       setPageEx(value);
-      window.scrollTo(0, 0);
+      // window.scrollTo(0, 0);
     } else {
       setPageEx(1);
     }
@@ -32,10 +32,16 @@ const Pagination = ({ listSer, pageEx, setPageEx }) => {
   return (
     <div className="flex justify-center">
       {!listSer.results && (
-        <div className=" max-w-lg flex justify-between gap-2 bg-slate-800 bg-opacity-50 py-2 px-4 rounded">
-          <button onClick={() => prevPage()}>Prev</button>
+        <div className="btn-group">
+          <button onClick={() => prevPage()} className="btn">
+            «
+          </button>
           {listPage.map((page, index) => (
-            <button key={index} onClick={() => handlePage(page)}>
+            <button
+              key={index}
+              onClick={() => handlePage(page)}
+              className={`btn btn-md ${page === pageEx ? "btn-active" : ""}`}
+            >
               {page}
             </button>
           ))}
@@ -45,10 +51,13 @@ const Pagination = ({ listSer, pageEx, setPageEx }) => {
             onChange={(e) =>
               e.target.value ? handlePage(e.target.value) : handlePage(pageEx)
             }
-            className="text-white w-6 bg-slate-900 text-center"
+            // className="text-white w-12 bg-slate-900 text-center "
+            className="input input-ghost w-12"
           />
-          <button onClick={() => handlePage(500)}>{500}</button>
-          <button onClick={() => nextPage()}>Next</button>
+          {/* <button onClick={() => handlePage(500)}>{500}</button> */}
+          <button onClick={() => nextPage()} className="btn">
+            »
+          </button>
         </div>
       )}
     </div>

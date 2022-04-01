@@ -7,7 +7,10 @@ import User from "./page/User";
 
 function App() {
   return (
-    <div className="w-full min-h-screen text-white bg-gray-800">
+    <div
+      className="w-full min-h-screen text-white bg-gray-800"
+      data-theme="night"
+    >
       {/* flex flex-col justify-center items-center */}
 
       <Routes>
