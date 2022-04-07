@@ -15,8 +15,8 @@ const Wishlist = ({ uid }) => {
   const [favoriteList, setFavoriteList] = useState([]);
   const favoriteCollection = collection(firestore, "favorite");
   const favoriteListQuery = query(favoriteCollection, where("uid", "==", uid));
-  let unsub;
 
+  let unsub;
   const getFavoriteList = async () => {
     unsub = onSnapshot(favoriteListQuery, (snapshot) => {
       const result = [];
@@ -39,21 +39,23 @@ const Wishlist = ({ uid }) => {
 
   return (
     <div>
-      <span>Wishlist</span>
       <div className="max-w-xl flex flex-wrap gap-5">
         {favoriteList.map((movie, index) => (
-          <div key={index}>
-            <Link
-              to={`/movie/${movie.data().id}_${movie.data().original_title}`}
-            >
-              {movie.data().poster_path && <Poster movie={movie.data()} />}
-            </Link>
-            <button
-              onClick={() => handleDelete(index)}
-              className="w-full text-lg font-medium rounded-lg mt-2 py-3 px-4 bg-gradient-to-b from-rose-700 to-pink-900 hover:from-rose-800 hover:to-red-900 transition"
-            >
-              Delete
-            </button>
+          <div>
+            <span>{movie.data()}</span>
+            <div key={index}>
+              <Link
+                to={`/movie/${movie.data().id}_${movie.data().original_title}`}
+              >
+                {movie.data().poster_path && <Poster movie={movie.data()} />}
+              </Link>
+              <button
+                onClick={() => handleDelete(index)}
+                className="w-full text-lg font-medium rounded-lg mt-2 py-3 px-4 bg-gradient-to-b from-rose-700 to-pink-900 hover:from-rose-800 hover:to-red-900 transition"
+              >
+                Delete
+              </button>
+            </div>
           </div>
         ))}
       </div>

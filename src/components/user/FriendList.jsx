@@ -17,14 +17,16 @@ import React, { useEffect, useState } from "react";
 import { firestore } from "../../firebase/clientApp";
 import Chat from "./Chat";
 
-const FriendList = ({ currentID, setCurrentID }) => {
+const FriendList = () => {
+  const [currentID, setCurrentID] = useState("");
   const [anotherUser, setAnotherUser] = useState();
   const [newMessage, setNewMessage] = useState("");
   const [userArray, setUserArray] = useState([]);
   const [messages, setMessages] = useState([]);
+
   const auth = getAuth();
   const user = auth.currentUser;
-  const currentUserId = user.uid;
+  const currentUserUid = user.uid;
 
   const getArrayUser = async () => {
     const docRef = collection(firestore, "user");
@@ -36,34 +38,41 @@ const FriendList = ({ currentID, setCurrentID }) => {
     setUserArray(temp);
   };
 
-  const getChats = (friendUid, friendName, friendUser) => {
+  const getCurrentId = (friendUid, friendUser) => {
+    setMessages([]);
+    let str;
+    if (currentUserUid >= friendUid) {
+      str = currentUserUid + friendUid;
+    }
+    if (currentUserUid < friendUid) {
+      str = friendUid + currentUserUid;
+    }
+    setCurrentID(str);
+    // getChats(friendUser);
     setAnotherUser(friendUser);
-    setMessages(null);
-    setCurrentID(
-      currentUserId > friendUid
-        ? currentUserId + friendUid
-        : friendUid + currentUserId
-    );
-
-    const chatsDocRef = collection(firestore, `chats/${currentID}/messages`);
-    const chatsQuery = query(chatsDocRef, orderBy("createOn", "asc"));
-    const unsub = onSnapshot(chatsQuery, (snapshot) => {
-      snapshot.forEach((doc) => {
-        let msg = [];
-        snapshot.forEach((doc) => {
-          msg.push(doc.data());
-        });
-        setMessages(msg);
-      });
-    });
-    console.log(currentID);
   };
 
   useEffect(() => {
     getArrayUser();
-    setMessages("");
-    return () => {};
-  }, [currentUserId]);
+    const getChats = () => {
+      if (currentID) {
+        const chatsDocRef = collection(
+          firestore,
+          `chats/${currentID}/messages`
+        );
+        console.log(currentID);
+        const chatsQuery = query(chatsDocRef, orderBy("createOn", "asc"));
+        const unsub = onSnapshot(chatsQuery, (snapshot) => {
+          let msg = [];
+          snapshot.forEach((doc) => {
+            msg.push(doc.data());
+          });
+          setMessages(msg);
+        });
+      }
+    };
+    getChats();
+  }, [anotherUser]);
 
   return (
     <div className=" w-[600px] bg-blue-700 rounded-lg ">
@@ -74,7 +83,7 @@ const FriendList = ({ currentID, setCurrentID }) => {
             <div className=" absolute top-4 left-2 w-12 h-12 bg-white rounded-full " />
             <div className="flex flex-col">
               <button
-                onClick={() => getChats(user.uid, user.displayName, user)}
+                onClick={() => getCurrentId(user.uid, user)}
                 className="hover:underline"
               >
                 {user.displayName}
@@ -83,6 +92,7 @@ const FriendList = ({ currentID, setCurrentID }) => {
             </div>
           </div>
         ))}
+
       {anotherUser && (
         <Chat
           anotherUser={anotherUser}

@@ -9,6 +9,7 @@ import FavoriteList from "../components/FavoriteList";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const Movie = () => {
+  const [collectionMovie, setCollectionMovie] = useState([]);
   const [movie, setMovie] = useState({});
   const [genres, setGenres] = useState();
   const image = apiConfig.originalImage(movie.backdrop_path);
@@ -16,7 +17,6 @@ const Movie = () => {
   const params = useParams();
   const chank = params.slug.split("_");
   const imdbId = chank[0];
-  const [collectionMovie, setCollectionMovie] = useState([]);
 
   const auth = getAuth();
   const [isUser, setIsUser] = useState(false);
@@ -29,25 +29,12 @@ const Movie = () => {
   });
   const uid = auth.currentUser ? auth.currentUser.uid : "";
 
-  const handleAdd = async () => {
-    const newItem = { ...movie, uid };
+  const handleAdd = async (titlePlayList) => {
+    const newItem = { ...movie, uid, titlePlayList };
     await addDoc(collection(firestore, "favorite"), newItem);
   };
 
   //  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  // const [favoriteList, setFavoriteList] = useState([]);
-  // const favoriteCollection = collection(firestore, "favorite");
-  // const favoriteListQuery = query(favoriteCollection);
-
-  // const getFavoriteList = () => {
-  //   unsub = onSnapshot(favoriteListQuery, (snapshot) => {
-  //     const result = [];
-  //     snapshot.forEach((doc) => {
-  //       result.push(doc);
-  //     });
-  //     setFavoriteList(result);
-  //   });
-  // };
 
   const handleDelete = async (index) => {
     // let delItem;
@@ -118,11 +105,7 @@ const Movie = () => {
                 <div className="flex gap-4 items-center">
                   {isUser ? (
                     <div className="flex  items-center gap-2 mt-4">
-                      <FavoriteList
-                        movie={movie.title}
-                        handleAdd={handleAdd}
-                        handleDelete={handleDelete}
-                      />
+                      <FavoriteList handleAdd={handleAdd} uid={uid} />
 
                       {/* LINK IN ROOM */}
                       <Link

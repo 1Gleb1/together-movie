@@ -26,6 +26,7 @@ const Search = ({ setListSer }) => {
       console.log("error");
     }
   };
+
   const enterEvent = (e) => {
     e.preventDefault();
     if (e.keyCode === 13) {
@@ -40,6 +41,7 @@ const Search = ({ setListSer }) => {
       document.removeEventListener("keyup", enterEvent);
     };
   }, [keyword]);
+
   return (
     <div className="mb-2">
       {/* <input

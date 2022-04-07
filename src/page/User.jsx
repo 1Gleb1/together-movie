@@ -9,7 +9,6 @@ import Wishlist from "../components/user/Wishlist";
 const User = () => {
   const auth = getAuth();
   const [isUser, setIsUser] = useState(false);
-  const [currentID, setCurrentID] = useState();
 
   const uid = auth.currentUser ? auth.currentUser.uid : "";
   onAuthStateChanged(auth, (user) => {
@@ -49,9 +48,9 @@ const User = () => {
             <h2 className="text-center text-xl font-bold bg-slate-700 text-white rounded-lg py-2 mb-2">
               FrienList
             </h2>
-            <FriendList currentID={currentID} setCurrentID={setCurrentID} />
+            <FriendList />
           </div>
-          <Wishlist uid={uid} />
+          {/* <Wishlist uid={uid} /> */}
           <div />
         </div>
       )}
