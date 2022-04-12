@@ -5,8 +5,9 @@ import tmdbApi from "../api/tmdbApi";
 import Poster from "../components/Poster";
 import { firestore } from "../firebase/clientApp";
 import { addDoc, collection } from "firebase/firestore";
-import FavoriteList from "../components/FavoriteList";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth } from "firebase/auth";
+import Player from "../components/movie/Player";
+import Hero from "../components/movie/Hero";
 
 const Movie = () => {
   const [collectionMovie, setCollectionMovie] = useState([]);
@@ -19,14 +20,7 @@ const Movie = () => {
   const imdbId = chank[0];
 
   const auth = getAuth();
-  const [isUser, setIsUser] = useState(false);
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      setIsUser(true);
-    } else {
-      setIsUser(false);
-    }
-  });
+
   const uid = auth.currentUser ? auth.currentUser.uid : "";
 
   const handleAdd = async (titlePlayList) => {
@@ -70,79 +64,21 @@ const Movie = () => {
 
   return (
     <div className="w-full min-h-sreen flex flex-col justify-center items-center ">
-      <div className="relative ">
-        <img src={image} />
-        <div
-          className="
-                    absolute top-0 right-0 bottom-0 left-0 
-                    bg-gradient-to-t from-gray-900 to-transparent"
-        >
-          <div className="absolute -bottom-14 left-10 sm:bottom-24 sm:left-20">
-            <div className="flex gap-6 items-center">
-              <div className={`w-full max-w-[100px] sm:max-w-[200px]`}>
-                <img src={imgW500} alt={movie.title} />
-              </div>
-              <div className=" flex flex-col flex-wrap text-white leading-none">
-                <span className="flex items-center gap-8 font-black text-sm sm:text-4xl ">
-                  {movie.title}
-                </span>
-                <div className="flex py-2 gap-2">
-                  {genres &&
-                    genres.map((genre, index) => (
-                      <div
-                        key={index}
-                        className="btn btn-outline btn-accent btn-xs rounded-full"
-                      >
-                        {genre.name}
-                      </div>
-                    ))}
-                </div>
-                <div className="badge badge-outline badge-ghost badge-lg">
-                  Duration: {movie.runtime} min
-                </div>
+      <Hero
+        auth={auth}
+        uid={uid}
+        image={image}
+        imgW500={imgW500}
+        movieTitle={movie.title}
+        genres={genres}
+        movieDuration={movie.runtime}
+        overview={movie.overview}
+        movieID={movie.id}
+        originalTitle={movie.original_title}
+        handleAdd={handleAdd}
+      />
 
-                <span className="text-sm sm:text-2xl">{movie.overview}</span>
-                <div className="flex gap-4 items-center">
-                  {isUser ? (
-                    <div className="flex  items-center gap-2 mt-4">
-                      <FavoriteList handleAdd={handleAdd} uid={uid} />
-
-                      {/* LINK IN ROOM */}
-                      <Link
-                        to={`/room/${(+new Date()).toString(16)}/${movie.id}_${
-                          movie.original_title
-                        }`}
-                      >
-                        <a className="btn btn-primary btn-xl">Create room</a>
-                      </Link>
-                      {/*  */}
-                    </div>
-                  ) : (
-                    <div>
-                      <Link to="/user">
-                        <div className="p-2 text-lg italic hover:underline">
-                          Sign in for add film in wishlist
-                        </div>
-                      </Link>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-20 flex justify-center bg-gray-700  w-full h-[250px] sm:h-[520px]">
-        <div className="relative w-full max-w-[340px] sm:max-w-[720px]">
-          <iframe
-            src={`https://74.svetacdn.in/DRQQUUcW0qvr?imdb_id=${movie.imdb_id}`} //imdb_id=${movie.imdb_id}
-            className="absolute w-[340px] sm:w-[720px] h-[250px] sm:h-[520px]"
-            frameBorder="0"
-            allowFullScreen
-          />
-        </div>
-      </div>
+      <Player movieURL={movie.imdb_id} />
 
       <div className="flex gap-8 flex-wrap pt-8 mb-4">
         {collectionMovie &&

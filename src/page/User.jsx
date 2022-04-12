@@ -38,20 +38,13 @@ const User = () => {
 
       {isUser && (
         <div className="flex flex-col lg:flex-row justify-between max-w-7xl w-full">
-          {/* <div>
-            <h2 className="text-center text-xl font-bold bg-slate-700 text-white rounded-lg py-2 mb-2">
-              Chat
-            </h2>
-            <Chat />
-          </div> */}
           <div>
             <h2 className="text-center text-xl font-bold bg-slate-700 text-white rounded-lg py-2 mb-2">
               FrienList
             </h2>
             <FriendList />
           </div>
-          {/* <Wishlist uid={uid} /> */}
-          <div />
+          <Wishlist uid={uid} />
         </div>
       )}
     </div>

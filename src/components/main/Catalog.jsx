@@ -52,7 +52,7 @@ const Catalog = () => {
 
   return (
     <div className="w-full min-h-screen bg-black bg-opacity-80">
-      <div className="py-2">
+      <div className="py-2 min-w-[300px] max-w-[1300px] m-auto">
         {/* <h2 className='text-3xl font-bold ml-6 sm:ml-12 pb-4'>Popular</h2> */}
         <Swiper
           modules={[EffectCoverflow, SwiperPagination]}
@@ -60,7 +60,7 @@ const Catalog = () => {
           pagination={{ clickable: true }}
           loop={true}
           autoplay={{ delay: 8000 }}
-          className="relative rounded-xl min-w-[300px] max-w-[1300px]"
+          className="relative rounded-xl "
         >
           {popularList.map((item, index) => (
             <SwiperSlide key={index}>
@@ -121,7 +121,7 @@ const Catalog = () => {
         </div>
       </div>
 
-      <div className="py-2">
+      <div className="pt-8 pb-12 max-w-2xl m-auto">
         <Pagination listSer={listSer} pageEx={pageEx} setPageEx={setPageEx} />
       </div>
     </div>

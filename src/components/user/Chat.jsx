@@ -1,20 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { GrSend } from "react-icons/gr";
 import { getAuth } from "firebase/auth";
 import { firestore } from "../../firebase/clientApp";
-import {
-  addDoc,
-  collection,
-  serverTimestamp,
-  setDoc,
-} from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 const Chat = ({
   setAnotherUser,
   anotherUser,
   newMessage,
   setNewMessage,
   messages,
-  setCurrentID,
   currentID,
 }) => {
   const { displayName, email, uid } = anotherUser;
@@ -40,10 +34,6 @@ const Chat = ({
     }
     setNewMessage("");
   };
-
-  useEffect(() => {
-    return () => {};
-  }, []);
 
   return (
     <div className="bg-gray-700 p-4 rounded-lg flex flex-col h-screen w-[600px]">

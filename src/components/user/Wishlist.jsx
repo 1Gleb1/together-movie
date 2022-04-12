@@ -20,7 +20,7 @@ const Wishlist = ({ uid }) => {
   const getFavoriteList = async () => {
     unsub = onSnapshot(favoriteListQuery, (snapshot) => {
       const result = [];
-      snapshot.forEach((doc) => result.push(doc));
+      snapshot.forEach((doc) => result.push(doc.data()));
       setFavoriteList(result);
     });
   };
@@ -41,9 +41,9 @@ const Wishlist = ({ uid }) => {
     <div>
       <div className="max-w-xl flex flex-wrap gap-5">
         {favoriteList.map((movie, index) => (
-          <div>
-            <span>{movie.data()}</span>
-            <div key={index}>
+          <div key={index}>
+            {/* {console.log(movie)} */}
+            <div>
               <Link
                 to={`/movie/${movie.data().id}_${movie.data().original_title}`}
               >

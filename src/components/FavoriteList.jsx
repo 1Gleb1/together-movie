@@ -27,8 +27,8 @@ const FavoriteList = ({ handleAdd, uid }) => {
 
   return (
     <div>
-      <div className="dropdown dropdown-hover">
-        <label tabindex="0" className="">
+      <div className="dropdown">
+        <label tabindex="0" className="btn btn-circle btn-outline btn-ghost ">
           <AiOutlinePlusCircle className="text-4xl" />
         </label>
         <ul
@@ -40,9 +40,9 @@ const FavoriteList = ({ handleAdd, uid }) => {
               <p onClick={() => handleAdd(title)}>{title}</p>
             </li>
           ))}
-          <li>
+          {/* <li>
             <p onClick={() => handleAdd("NewPlayList")}>NewPlayList</p>
-          </li>
+          </li> */}
           <input
             type="text"
             placeholder="New playlist"
