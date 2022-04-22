@@ -155,16 +155,16 @@ const Filter = ({ activeGenre, setActiveGenre, setPageEx }) => {
         spaceBetween={10}
         breakpoints={{
           320: {
-            slidesPerView: 2,
+            slidesPerView: 2.5,
           },
           400: {
-            slidesPerView: 3,
+            slidesPerView: 3.5,
           },
           640: {
             slidesPerView: 4,
           },
-          765: {
-            slidesPerView: 6,
+          768: {
+            slidesPerView: 5.5,
           },
           1000: {
             slidesPerView: 7.5,
@@ -178,9 +178,9 @@ const Filter = ({ activeGenre, setActiveGenre, setPageEx }) => {
               onClick={() => handleGeter(item.code)}
               className={`${
                 activeGenre.some((genre) => genre == item.code)
-                  ? "bg-indigo-900"
-                  : ""
-              } w-32 h-28 flex flex-col gap-2 justify-center items-center px-6 py-2 bg-gray-800 rounded-lg
+                  ? "bg-indigo-800"
+                  : " bg-opacity-50"
+              } w-32 h-28 flex flex-col gap-2 justify-center items-center px-6 py-2 bg-gray-800 rounded-lg border-2 border-indigo-900
                 `}
             >
               {item.icon}

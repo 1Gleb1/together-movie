@@ -3,7 +3,7 @@ import Catalog from "../components/main/Catalog";
 
 const Main = () => {
   return (
-    <div className="w-full min-h-screen bg-slate-800 ">
+    <div>
       <Catalog />
     </div>
   );

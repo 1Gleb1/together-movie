@@ -25,8 +25,8 @@ const Hero = ({
     }
   });
   return (
-    <div className="relative ">
-      <img src={image} />
+    <div className="relative w-full">
+      <img src={image} className="w-full" />
       <div
         className="
                     absolute top-0 right-0 bottom-0 left-0 
@@ -56,13 +56,12 @@ const Hero = ({
                 Duration: {movieDuration} min
               </div>
 
-              <span className="text-sm sm:text-2xl">{overview}</span>
+              <span className="text-sm sm:text-2xl max-w-3xl">{overview}</span>
               <div className="flex gap-4 items-center">
                 {isUser ? (
                   <div className="flex  items-center gap-2 mt-4">
                     <FavoriteList handleAdd={handleAdd} uid={uid} />
 
-                    {/* LINK IN ROOM */}
                     <Link
                       to={`/room/${(+new Date()).toString(
                         16
@@ -70,7 +69,6 @@ const Hero = ({
                     >
                       <a className="btn btn-primary btn-xl">Create room</a>
                     </Link>
-                    {/*  */}
                   </div>
                 ) : (
                   <div>

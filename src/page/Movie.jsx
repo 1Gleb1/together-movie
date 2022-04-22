@@ -24,23 +24,11 @@ const Movie = () => {
   const uid = auth.currentUser ? auth.currentUser.uid : "";
 
   const handleAdd = async (titlePlayList) => {
-    const newItem = { ...movie, uid, titlePlayList };
-    await addDoc(collection(firestore, "favorite"), newItem);
+    if (titlePlayList.length) {
+      const newItem = { ...movie, uid, titlePlayList };
+      await addDoc(collection(firestore, "favorite"), newItem);
+    }
   };
-
-  //  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  const handleDelete = async (index) => {
-    // let delItem;
-    // favoriteList.forEach((item) => {
-    //   if (item == index) {
-    //   }
-    // });
-    // const itemRef = doc(firestore, "favorite", delItem);
-    // await deleteDoc(itemRef);
-  };
-
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   useEffect(() => {
     const getMovie = async () => {
@@ -83,7 +71,14 @@ const Movie = () => {
       <div className="flex gap-8 flex-wrap pt-8 mb-4">
         {collectionMovie &&
           collectionMovie.map((movie, index) => (
-            <Link key={index} to={`/movie/${movie.id}_${movie.original_title}`}>
+            <Link
+              key={index}
+              to={
+                movie.vote_average > 0
+                  ? `/movie/${movie.id}_${movie.title}`
+                  : ""
+              }
+            >
               {<Poster movie={movie} />}
             </Link>
           ))}

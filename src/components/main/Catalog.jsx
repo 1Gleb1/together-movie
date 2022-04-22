@@ -51,8 +51,8 @@ const Catalog = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-black bg-opacity-80">
-      <div className="py-2 min-w-[300px] max-w-[1300px] m-auto">
+    <div className="w-full min-h-screen ">
+      <div className="py-2 min-w-[300px] max-w-[1200px] m-auto">
         {/* <h2 className='text-3xl font-bold ml-6 sm:ml-12 pb-4'>Popular</h2> */}
         <Swiper
           modules={[EffectCoverflow, SwiperPagination]}
@@ -76,11 +76,9 @@ const Catalog = () => {
           ))}
         </Swiper>
       </div>
-
       <div className="flex justify-center pt-4">
         <Search setListSer={setListSer} setMovieItems={setMovieItems} />
       </div>
-
       {!listSer.results && (
         <div className="py-2">
           <Filter
@@ -108,8 +106,15 @@ const Catalog = () => {
           {!listSer.results && (
             <div className="flex flex-wrap gap-8 justify-center my-2">
               {movieItems.map((movie, index) => (
-                <Link key={index} to={`/movie/${movie.id}_${movie.title}`}>
-                  {movie.poster_path && movie.vote_average !== 0 && (
+                <Link
+                  key={index}
+                  to={
+                    movie.vote_average > 0
+                      ? `/movie/${movie.id}_${movie.title}`
+                      : "/"
+                  }
+                >
+                  {movie.poster_path && (
                     <AnimatePresence exitBeforeEnter={true}>
                       <Poster movie={movie} key={movie.title} index={index} />
                     </AnimatePresence>
@@ -120,7 +125,6 @@ const Catalog = () => {
           )}
         </div>
       </div>
-
       <div className="pt-8 pb-12 max-w-2xl m-auto">
         <Pagination listSer={listSer} pageEx={pageEx} setPageEx={setPageEx} />
       </div>

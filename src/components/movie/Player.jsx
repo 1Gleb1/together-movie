@@ -11,10 +11,6 @@ const Player = ({ movieURL }) => {
           allowFullScreen
         />
       </div>
-      <div>
-        <div id="yohoho" data-kinopoisk="401522"></div>
-        <script src="//yohoho.cc/yo.js"></script>
-      </div>
     </div>
   );
 };

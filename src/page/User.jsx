@@ -44,7 +44,7 @@ const User = () => {
             </h2>
             <FriendList />
           </div>
-          <Wishlist uid={uid} />
+          <Wishlist uid={uid} />  
         </div>
       )}
     </div>

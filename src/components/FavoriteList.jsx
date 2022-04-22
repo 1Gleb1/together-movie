@@ -7,6 +7,9 @@ const FavoriteList = ({ handleAdd, uid }) => {
   const [title, setTitle] = useState("");
 
   const [playList, setPlayList] = useState([]);
+
+  const [filterArray, setFilterArray] = useState([]);
+
   const favoriteCollection = collection(firestore, "favorite");
   const favoriteListQuery = query(favoriteCollection, where("uid", "==", uid));
   let unsub;
@@ -17,6 +20,10 @@ const FavoriteList = ({ handleAdd, uid }) => {
       snapshot.forEach((doc) => result.push(doc.data().titlePlayList));
       setPlayList(result);
     });
+    let arr1 = new Set(playList);
+    let arr2 = [];
+    arr1.forEach((item) => arr2.push(item));
+    setFilterArray(arr2);
   };
   useEffect(() => {
     getFavoriteList();
@@ -33,23 +40,34 @@ const FavoriteList = ({ handleAdd, uid }) => {
         </label>
         <ul
           tabindex="0"
-          className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+          className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-60 max-h-52 "
         >
-          {playList.map((title, index) => (
-            <li key={index}>
-              <p onClick={() => handleAdd(title)}>{title}</p>
-            </li>
-          ))}
-          {/* <li>
-            <p onClick={() => handleAdd("NewPlayList")}>NewPlayList</p>
-          </li> */}
-          <input
-            type="text"
-            placeholder="New playlist"
-            className="input"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
+          <div className="overflow-auto">
+            {filterArray.map((title, index) => (
+              <li key={index}>
+                <p onClick={() => handleAdd(title)}>{title}</p>
+              </li>
+            ))}
+          </div>
+
+          <div className="flex justify-around items-center">
+            <input
+              type="text"
+              placeholder="New playlist"
+              className="input w-40 mt-2"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+            <button
+              className="w-8 h-8 bg-secondary rounded-full flex-grow-0 "
+              onClick={() => {
+                handleAdd(title);
+                setTitle("");
+              }}
+            >
+              +
+            </button>
+          </div>
         </ul>
       </div>
     </div>
