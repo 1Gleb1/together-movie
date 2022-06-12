@@ -12,7 +12,7 @@ import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/effect-cube";
 import "swiper/css/pagination";
-import { motion, AnimatePresence } from "framer-motion";
+import ListContent from "./ListContent";
 
 const Catalog = () => {
   const [activeGenre, setActiveGenre] = useState([]);
@@ -20,6 +20,9 @@ const Catalog = () => {
   const [movieItems, setMovieItems] = useState([]);
   const [pageEx, setPageEx] = useState(1);
   const [popularList, setPopularList] = useState([]);
+  const [tvPopularList, setTvPopularList] = useState([]); // сериалы тут
+  const [itemContent, setItemContent] = useState([]);
+  const [typeContent, setTypeContent] = useState("");
   const imageCollection = [];
 
   popularList.forEach((item) => {
@@ -36,13 +39,14 @@ const Catalog = () => {
           params,
         });
         const result = await tmdbApi.getMovieByCategory({ popular });
+        const tvPopular = await tmdbApi.getTvPopular(pageEx);
         setMovieItems(response.results);
         setPopularList(result.results);
+        setTvPopularList(tvPopular.results); // СЕРИАЛЫ ТУТ
       } catch {
         console.log("error");
       }
     };
-
     getMoviesWithGeter();
   }, [activeGenre, pageEx, listSer]);
 
@@ -51,8 +55,8 @@ const Catalog = () => {
   };
 
   return (
-    <div className="w-full min-h-screen ">
-      <div className="py-2 min-w-[300px] max-w-[1200px] m-auto">
+    <div className="min-w-[300px] max-w-[1200px] mx-auto w-full min-h-screen ">
+      <div className="py-2 m-auto">
         {/* <h2 className='text-3xl font-bold ml-6 sm:ml-12 pb-4'>Popular</h2> */}
         <Swiper
           modules={[EffectCoverflow, SwiperPagination]}
@@ -64,7 +68,7 @@ const Catalog = () => {
         >
           {popularList.map((item, index) => (
             <SwiperSlide key={index}>
-              <Link Link to={`/movie/${item.id}_${item.title}`}>
+              <Link Link to={`/movie/movie_${item.id}_${item.title}`}>
                 <img
                   src={imageCollection[index]}
                   className="object-cover rounded-xl overflow-hidden relative top-0 "
@@ -78,6 +82,26 @@ const Catalog = () => {
       </div>
       <div className="flex justify-center pt-4">
         <Search setListSer={setListSer} setMovieItems={setMovieItems} />
+      </div>
+      <div className="w-full flex py-4">
+        <button
+          className=" w-1/2 item-center"
+          onClick={() => {
+            setItemContent(movieItems);
+            setTypeContent("movie");
+          }}
+        >
+          MOVIE
+        </button>
+        <button
+          className=" w-1/2 item-center"
+          onClick={() => {
+            setItemContent(tvPopularList);
+            setTypeContent("tv");
+          }}
+        >
+          SERIES/TVshows/ANIME
+        </button>
       </div>
       {!listSer.results && (
         <div className="py-2">
@@ -98,36 +122,21 @@ const Catalog = () => {
           {/* For Serch List */}
           {listSer.results &&
             listSer.results.map((movie, index) => (
-              <Link key={index} to={`/movie/${movie.id}_${movie.title}`}>
+              <Link key={index} to={`/movie/tv_${movie.id}_${movie.title}`}>
                 {movie.poster_path && <Poster movie={movie} />}
               </Link>
             ))}
           {/* For All List */}
           {!listSer.results && (
-            <div className="flex flex-wrap gap-8 justify-center my-2">
-              {movieItems.map((movie, index) => (
-                <Link
-                  key={index}
-                  to={
-                    movie.vote_average > 0
-                      ? `/movie/${movie.id}_${movie.title}`
-                      : "/"
-                  }
-                >
-                  {movie.poster_path && (
-                    <AnimatePresence exitBeforeEnter={true}>
-                      <Poster movie={movie} key={movie.title} index={index} />
-                    </AnimatePresence>
-                  )}
-                </Link>
-              ))}
-            </div>
+            <ListContent itemContent={itemContent} typeContent={typeContent} />
           )}
         </div>
       </div>
-      <div className="pt-8 pb-12 max-w-2xl m-auto">
-        <Pagination listSer={listSer} pageEx={pageEx} setPageEx={setPageEx} />
-      </div>
+      {typeContent && (
+        <div className="pt-8 pb-12 max-w-2xl m-auto">
+          <Pagination listSer={listSer} pageEx={pageEx} setPageEx={setPageEx} />
+        </div>
+      )}
     </div>
   );
 };

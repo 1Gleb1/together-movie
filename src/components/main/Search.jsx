@@ -4,24 +4,16 @@ import { AiOutlineSearch } from "react-icons/ai";
 
 const Search = ({ setListSer }) => {
   const [keyword, setKeyword] = useState("");
-  // const [searchList, setSearchList] = useState({});
 
-  // const getMovie = async () => {
-  //     try {
-  //         setSearchList({})
-  //         const response = await tmdbApi.getMoviesListBySearch(keyword)
-  //         setSearchList(response)
-  //         setListSer(searchList)
-  //         console.log(searchList);
-  //     } catch {
-  //         console.log('error');
-  //     }
-  // }
-
-  const getMovie = async () => {
+  const getMediaBySearch = async () => {
+    const tvAndMovie = [];
     try {
-      const response = await tmdbApi.getMoviesListBySearch(keyword);
-      setListSer(response);
+      const responseMovie = await tmdbApi.getMoviesListBySearch(keyword);
+      const responseTv = await tmdbApi.getTvBySearch(keyword);
+      responseMovie.results.push(responseTv.results[0]);
+      tvAndMovie.push(responseMovie.results);
+      console.log(tvAndMovie);
+      setListSer(responseMovie, responseTv);
     } catch {
       console.log("error");
     }
@@ -30,7 +22,7 @@ const Search = ({ setListSer }) => {
   const enterEvent = (e) => {
     e.preventDefault();
     if (e.keyCode === 13) {
-      getMovie();
+      getMediaBySearch();
       setKeyword("");
     }
   };
@@ -60,7 +52,7 @@ const Search = ({ setListSer }) => {
             onChange={(e) => setKeyword(e.target.value)}
             className="input input-border"
           />
-          <button className="btn btn-square" onClick={() => getMovie()}>
+          <button className="btn btn-square" onClick={() => getMediaBySearch()}>
             <AiOutlineSearch className="text-2xl" />
           </button>
         </div>

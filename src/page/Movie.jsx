@@ -17,7 +17,8 @@ const Movie = () => {
   const imgW500 = apiConfig.w500Image(movie.poster_path);
   const params = useParams();
   const chank = params.slug.split("_");
-  const imdbId = chank[0];
+  const typeContent = chank[0];
+  const imdbId = chank[1];
 
   const auth = getAuth();
 
@@ -33,7 +34,12 @@ const Movie = () => {
   useEffect(() => {
     const getMovie = async () => {
       try {
-        const response = await tmdbApi.getMovie(imdbId);
+        let response;
+        if (typeContent == "tv") {
+          response = await tmdbApi.getTv(imdbId);
+        } else {
+          response = await tmdbApi.getMovie(imdbId);
+        }
         setMovie(response);
         setGenres(response.genres);
         if (movie.backdrop_path !== null) {
@@ -66,9 +72,13 @@ const Movie = () => {
         handleAdd={handleAdd}
       />
 
-      <Player movieURL={movie.imdb_id} />
+      <Player
+        movieURL={movie.imdb_id}
+        title={movie.name}
+        typeContent={typeContent}
+      />
 
-      <div className="flex gap-8 flex-wrap pt-8 mb-4">
+      <div className="flex gap-8 flex-wrap pt-8 mb-2">
         {collectionMovie &&
           collectionMovie.map((movie, index) => (
             <Link
