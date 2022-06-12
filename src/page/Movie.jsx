@@ -85,7 +85,7 @@ const Movie = () => {
               key={index}
               to={
                 movie.vote_average > 0
-                  ? `/movie/${movie.id}_${movie.title}`
+                  ? `/movie/movie_${movie.id}_${movie.title}`
                   : ""
               }
             >

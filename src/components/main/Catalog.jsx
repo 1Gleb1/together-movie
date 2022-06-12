@@ -30,6 +30,17 @@ const Catalog = () => {
     imageCollection.push(image);
   });
 
+  const handleTypeAndItems = (movie) => {
+    console.log(movie);
+    if (movie) {
+      setItemContent(movieItems);
+      setTypeContent("movie");
+    } else {
+      setItemContent(tvPopularList);
+      setTypeContent("tv");
+    }
+  };
+
   useEffect(() => {
     const getMoviesWithGeter = async () => {
       const params = { page: pageEx };
@@ -86,19 +97,13 @@ const Catalog = () => {
       <div className="w-full flex py-4">
         <button
           className=" w-1/2 item-center"
-          onClick={() => {
-            setItemContent(movieItems);
-            setTypeContent("movie");
-          }}
+          onClick={() => handleTypeAndItems(movieItems)}
         >
           MOVIE
         </button>
         <button
           className=" w-1/2 item-center"
-          onClick={() => {
-            setItemContent(tvPopularList);
-            setTypeContent("tv");
-          }}
+          onClick={() => handleTypeAndItems(!movieItems)}
         >
           SERIES/TVshows/ANIME
         </button>
@@ -120,9 +125,15 @@ const Catalog = () => {
       <div className="m-auto pt-6 px-6 my-2 rounded-lg max-w-[1100px]">
         <div className="flex flex-wrap gap-8 justify-center my-2">
           {/* For Serch List */}
+          {console.log(listSer)}
           {listSer.results &&
             listSer.results.map((movie, index) => (
-              <Link key={index} to={`/movie/tv_${movie.id}_${movie.title}`}>
+              <Link
+                key={index}
+                to={`/movie/${movie.name ? "tv" : "movie"}_${movie.id}_${
+                  movie.title
+                }`}
+              >
                 {movie.poster_path && <Poster movie={movie} />}
               </Link>
             ))}

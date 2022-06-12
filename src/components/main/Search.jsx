@@ -12,7 +12,6 @@ const Search = ({ setListSer }) => {
       const responseTv = await tmdbApi.getTvBySearch(keyword);
       responseMovie.results.push(responseTv.results[0]);
       tvAndMovie.push(responseMovie.results);
-      console.log(tvAndMovie);
       setListSer(responseMovie, responseTv);
     } catch {
       console.log("error");
