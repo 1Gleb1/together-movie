@@ -78,7 +78,7 @@ const Movie = () => {
         typeContent={typeContent}
       />
 
-      <div className="flex gap-8 flex-wrap pt-8 mb-2">
+      <div className="flex gap-8 flex-wrap pt-8 mb-8">
         {collectionMovie &&
           collectionMovie.map((movie, index) => (
             <Link

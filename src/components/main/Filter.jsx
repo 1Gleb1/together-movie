@@ -21,7 +21,13 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/autoplay";
 
-const Filter = ({ activeGenre, setActiveGenre, setPageEx }) => {
+const Filter = ({
+  activeGenre,
+  setActiveGenre,
+  setPageEx,
+  handleTypeAndItems,
+  movieItems,
+}) => {
   const genres = [
     {
       name: "All",
@@ -146,7 +152,6 @@ const Filter = ({ activeGenre, setActiveGenre, setPageEx }) => {
       setActiveGenre(temp);
     }
     setPageEx(1);
-    console.log();
   };
 
   return (

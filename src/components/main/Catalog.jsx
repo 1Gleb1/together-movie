@@ -31,7 +31,6 @@ const Catalog = () => {
   });
 
   const handleTypeAndItems = (movie) => {
-    console.log(movie);
     if (movie) {
       setItemContent(movieItems);
       setTypeContent("movie");
@@ -91,7 +90,15 @@ const Catalog = () => {
           ))}
         </Swiper>
       </div>
-      <div className="flex justify-center pt-4">
+      <div className="flex justify-center items-center pt-4">
+        {listSer.results && (
+          <button
+            onClick={handleHome}
+            className={"text-xl font-bold text-center bg-red-500 w-8 h-8"}
+          >
+            Х
+          </button>
+        )}
         <Search setListSer={setListSer} setMovieItems={setMovieItems} />
       </div>
       <div className="w-full flex py-4">
@@ -114,28 +121,29 @@ const Catalog = () => {
             setPageEx={setPageEx}
             setActiveGenre={setActiveGenre}
             activeGenre={activeGenre}
+            handleTypeAndItems={handleTypeAndItems}
+            movieItems={movieItems}
           />
         </div>
       )}
-      {listSer.results && (
-        <button onClick={handleHome} className={"text-5xl py-2 font-bold"}>
-          Home
-        </button>
-      )}
-      <div className="m-auto pt-6 px-6 my-2 rounded-lg max-w-[1100px]">
-        <div className="flex flex-wrap gap-8 justify-center my-2">
+
+      <div className="m-auto pt-6 px-6 rounded-lg max-w-[1100px]">
+        <div className="flex flex-wrap gap-8 justify-center py-8">
           {/* For Serch List */}
           {console.log(listSer)}
           {listSer.results &&
             listSer.results.map((movie, index) => (
-              <Link
-                key={index}
-                to={`/movie/${movie.name ? "tv" : "movie"}_${movie.id}_${
-                  movie.title
-                }`}
-              >
-                {movie.poster_path && <Poster movie={movie} />}
-              </Link>
+              <div key={index}>
+                {movie && (
+                  <Link
+                    to={`/movie/${movie.title ? "movie" : "tv"}_${movie.id}_${
+                      movie.title ? movie.title : movie.name
+                    }`}
+                  >
+                    {movie.poster_path && <Poster movie={movie} />}
+                  </Link>
+                )}
+              </div>
             ))}
           {/* For All List */}
           {!listSer.results && (
@@ -145,7 +153,13 @@ const Catalog = () => {
       </div>
       {typeContent && (
         <div className="pt-8 pb-12 max-w-2xl m-auto">
-          <Pagination listSer={listSer} pageEx={pageEx} setPageEx={setPageEx} />
+          <Pagination
+            listSer={listSer}
+            pageEx={pageEx}
+            setPageEx={setPageEx}
+            handleTypeAndItems={handleTypeAndItems}
+            movieItems={movieItems}
+          />
         </div>
       )}
     </div>

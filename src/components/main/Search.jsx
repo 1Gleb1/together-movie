@@ -18,20 +18,20 @@ const Search = ({ setListSer }) => {
     }
   };
 
-  const enterEvent = (e) => {
-    e.preventDefault();
-    if (e.keyCode === 13) {
-      getMediaBySearch();
-      setKeyword("");
-    }
-  };
+  // const enterEvent = (e) => {
+  //   e.preventDefault();
+  //   if (e.keyCode === 13) {
+  //     getMediaBySearch();
+  //     setKeyword("");
+  //   }
+  // };
 
-  useEffect(() => {
-    document.removeEventListener("keyup", enterEvent);
-    return () => {
-      document.removeEventListener("keyup", enterEvent);
-    };
-  }, [keyword]);
+  // useEffect(() => {
+  //   document.removeEventListener("keyup", enterEvent);
+  //   return () => {
+  //     document.removeEventListener("keyup", enterEvent);
+  //   };
+  // }, [keyword]);
 
   return (
     <div className="mb-2">
