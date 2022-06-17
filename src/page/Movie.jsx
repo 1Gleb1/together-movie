@@ -56,6 +56,7 @@ const Movie = () => {
     return () => {};
   }, [imdbId]);
 
+  console.log(movie);
   return (
     <div className="w-full min-h-sreen flex flex-col justify-center items-center ">
       <Hero
@@ -76,6 +77,10 @@ const Movie = () => {
         movieURL={movie.imdb_id}
         title={movie.name}
         typeContent={typeContent}
+        // title={movie.original_name}
+
+        originalLanguage={movie.original_language}
+        originalName={movie.original_name}
       />
 
       <div className="flex gap-8 flex-wrap pt-8 mb-8">
