@@ -26,7 +26,6 @@ const Filter = ({
   setActiveGenre,
   setPageEx,
   handleTypeAndItems,
-  movieItems,
 }) => {
   const genres = [
     {
@@ -148,10 +147,11 @@ const Filter = ({
     if (value == null) {
       temp.length = 0;
       setActiveGenre(temp);
-    } else {
-      setActiveGenre(temp);
     }
+
     setPageEx(1);
+    handleTypeAndItems(temp);
+    console.log(temp);
   };
 
   return (
@@ -162,14 +162,11 @@ const Filter = ({
           320: {
             slidesPerView: 2.5,
           },
-          400: {
-            slidesPerView: 3.5,
-          },
           640: {
             slidesPerView: 4,
           },
           768: {
-            slidesPerView: 5.5,
+            slidesPerView: 6,
           },
           1000: {
             slidesPerView: 7.5,
